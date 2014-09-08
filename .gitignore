@@ -1,0 +1,16 @@
+log/*
+*.pyc
+nbproject
+.idea
+.idea/workspace.xml
+.idea/dictionaries
+static/CACHE
+bin
+include
+local
+src
+man
+build
+venv
+*~
+*_log.txt

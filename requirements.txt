@@ -1,0 +1,14 @@
+Django==1.5
+Markdown==2.4.1
+Pillow
+South
+django-extensions
+django-filter
+django-grappelli==2.4.5
+django-mssql==1.6.1
+djangorestframework
+pyusb
+pywin32==219
+pywinusb
+simplejson
+six
