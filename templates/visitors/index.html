@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block pageTitle %}<i class="fa fa-users"></i> Visitors List {% endblock %}
+{% block breadcrumb %}
+<span class="divider">/</span>
+  <span class="bread-current">Visitors</span>
+{% endblock %}
+
+{% block main-content %}
+  <a class="btn btn-default" href="/add-visitor">Add Visitor</a>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="widget">
+      <!-- Widget title -->
+      <div class="widget-head">
+
+        <div class="widget-icons pull-right">
+          <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
+          <!--a href="#" class="wclose"><i class="fa fa-times"></i></a-->
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <!-- Widget content -->
+
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Tag No</th>
+              <th>Checked In</th>
+              <th>Date last Visited</th>
+              <th>Host</th>
+              <th>Host Phone</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Micheal Alabi</td>
+              <td>alabim@staffbox.com</td>
+              <td>080886733399</td>
+              <td>NCC00012</td>
+              <td>2014-09-4 10:11</td>
+              <td>2nd Aug 2014</td>
+              <td>Hassan Abdullahi</td>
+              <td>08023453344</td>
+              <td>Engineering</td>
+            </tr>
+          </tbody>
+          </table>
+
+
+        <div class="widget-foot">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
