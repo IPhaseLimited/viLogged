@@ -125,6 +125,10 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
+FILE_UPLOAD_PERMISSIONS = 0644
+LOGIN_URL = "/login"
+LOGIN_REDIRECT_URL = "/"
+
 REST_FRAMEWORK = {
 # Use hyperlinked styles by default.
 # Only used if the `serializer_class` attribute is not set on a view.
