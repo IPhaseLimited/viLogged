@@ -1,9 +1,10 @@
 from django.contrib.auth.views import login as django_login, logout as django_logout
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
+from braces.views import LoginRequiredMixin
 
 
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
 
 
