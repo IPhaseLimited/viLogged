@@ -27,7 +27,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
 
 class VisitorsViewSet(viewsets.ModelViewSet):
     model = Visitors
-    filter_fields = ('phone', 'email', 'visitors_pass_code')
+    filter_fields = ('visitors_phone', 'visitors_email', 'visitors_pass_code')
 
 
 class VisitorsLocationViewSet(viewsets.ModelViewSet):
@@ -81,5 +81,8 @@ urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^rest/', include(router.urls)),
+    url(r'^rest-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^login(/*)$', login, name="login"),
+    url(r'^logout(/*)$', logout, name="logout"),
     #url(r'^rest-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
