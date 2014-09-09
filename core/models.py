@@ -5,23 +5,32 @@ from mixin_tools.history import HistoryFieldsMixin
 
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, blank=True, null=True)
+    user_id = models.ForeignKey(User, default=1)
     department = models.CharField(max_length=100)
     phone = models.CharField(max_length=50)
     image_url = models.CharField(max_length=100)
 
 
+class CompanyEntranceNames(HistoryFieldsMixin):
+    entrance_name = models.CharField(max_length=50)
+
+
+class CompanyDepartments(HistoryFieldsMixin):
+    department_name = models.CharField(max_length=100)
+    department_head = models.ForeignKey(UserProfile, blank=True, null=True)
+
+
 class Visitors(HistoryFieldsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    visitors_email = models.CharField(max_length=50)
+    visitors_email = models.CharField(max_length=50, unique=True)
     visitors_phone = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
-    state_of_origin = models.IntegerField(max_length=5)
-    lga = models.IntegerField(max_length=5)
-    image_url = models.CharField(max_length=100)
-    fingerprint = models.CharField(max_length=100)
-    visitors_pass_code = models.CharField(max_length=50)
+    date_of_birth = models.DateField(blank=True, null=True)
+    state_of_origin = models.IntegerField(max_length=5, blank=True, null=True)
+    lga = models.IntegerField(max_length=5, blank=True, null=True)
+    image_url = models.CharField(max_length=100, blank=True, null=True)
+    fingerprint = models.CharField(max_length=100, blank=True, null=True)
+    visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
 
 
 class VisitorGroup(HistoryFieldsMixin):
@@ -41,9 +50,10 @@ class VisitorsLocation(HistoryFieldsMixin):
 
 
 class VisitStatus(HistoryFieldsMixin):
-    visitor_id = models.ForeignKey(Visitors)
+    visitor_id = models.ForeignKey(Visitors, blank=True, null=True)
     Checked_in = models.DateTimeField()
     checked_out = models.DateTimeField()
+    entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True)
 
 
 class Appointments(HistoryFieldsMixin):
@@ -55,6 +65,7 @@ class Appointments(HistoryFieldsMixin):
     visit_start_time = models.TimeField()
     visit_end_time = models.TimeField()
     host_id = models.ForeignKey(UserProfile, blank=True, null=True)
+    escort_required = models.BooleanField(default=True)
 
 
 class AppointmentsStatus(HistoryFieldsMixin):
