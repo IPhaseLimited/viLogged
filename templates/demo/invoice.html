@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <!-- Title and other stuffs -->
-  <title>Error-Log - MacAdmin</title>
+  <title>Invoice - MacAdmin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="keywords" content="">
@@ -56,7 +56,7 @@
 			<span>Menu</span>
 		  </button>
 		  <!-- Site name for smallar screens -->
-		  <a href="index.html" class="navbar-brand hidden-lg">MacBeth</a>
+		  <a href="../index.html" class="navbar-brand hidden-lg">MacBeth</a>
 		</div>
       
       
@@ -144,7 +144,7 @@
             <ul class="dropdown-menu">
               <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
               <li><a href="#"><i class="fa fa-cogs"></i> Settings</a></li>
-              <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+              <li><a href="../login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
             </ul>
           </li>
           
@@ -352,7 +352,7 @@
         <!-- If the main navigation has sub navigation, then add the class "has_sub" to "li" of main navigation. -->
         <ul id="nav">
           <!-- Main menu with font awesome icon -->
-          <li><a href="index.html"><i class="fa fa-home"></i> Dashboard</a>
+          <li><a href="../index.html"><i class="fa fa-home"></i> Dashboard</a>
             <!-- Sub menu markup 
             <ul>
               <li><a href="#">Submenu #1</a></li>
@@ -367,34 +367,32 @@
               <li><a href="widgets3.html">Widgets #3</a></li>
             </ul>
           </li>  
-          <li class="has_sub">
-			<a href="#"><i class="fa fa-file-o"></i> Pages #1  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+          <li class="has_sub open"><a href="#"><i class="fa fa-file-o"></i> Pages #1  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="post.html">Post</a></li>
-              <li><a href="login.html">Login</a></li>
+              <li><a href="../login.html">Login</a></li>
               <li><a href="register.html">Register</a></li>
               <li><a href="support.html">Support</a></li>
-              <li><a href="invoice.html">Invoice</a></li>
+              <li class="current"><a href="invoice.html">Invoice</a></li>
               <li><a href="gallery.html">Gallery</a></li>
             </ul>
           </li> 
-          <li class="has_sub open">
-			<a href="#"><i class="fa fa-file-o"></i> Pages #2  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+          <li class="has_sub"><a href="#"><i class="fa fa-file-o"></i> Pages #2  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="media.html">Media</a></li>
               <li><a href="statement.html">Statement</a></li>
               <li><a href="error.html">Error</a></li>
-              <li class="current"><a href="error-log.html">Error Log</a></li>
+              <li><a href="error-log.html">Error Log</a></li>
               <li><a href="calendar.html">Calendar</a></li>
               <li><a href="grid.html">Grid</a></li>
             </ul>
-          </li>                
+          </li> 
 		  <li class="has_sub"><a href="#"><i class="fa fa-table"></i> Tables  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="tables.html">Tables</a></li>
               <li><a href="dynamic-tables.html">Dynamic Tables</a></li>
             </ul>
-          </li> 		  
+          </li>		  
           <li><a href="charts.html"><i class="fa fa-bar-chart-o"></i> Charts</a></li> 
           <li><a href="forms.html"><i class="fa fa-tasks"></i> Forms</a></li>
           <li><a href="ui.html"><i class="fa fa-magic"></i> User Interface</a></li>
@@ -408,11 +406,11 @@
 
       <!-- Page heading -->
       <div class="page-head">
-        <h2 class="pull-left"><i class="fa fa-file-o"></i> Error Log</h2>
+        <h2 class="pull-left"><i class="fa fa-file-o"></i> Invoice</h2>
 
         <!-- Breadcrumb -->
         <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="fa fa-home"></i> Home</a> 
+          <a href="../index.html"><i class="fa fa-home"></i> Home</a>
           <!-- Divider -->
           <span class="divider">/</span> 
           <a href="#" class="bread-current">Dashboard</a>
@@ -432,7 +430,7 @@
 
               <div class="widget">
                 <div class="widget-head">
-                  <div class="pull-left">Error Log</div>
+                  <div class="pull-left">Invoice</div>
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
                     <a href="#" class="wclose"><i class="fa fa-times"></i></a>
@@ -440,64 +438,127 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
-                  <div class="padd">
+                  <div class="padd invoice">
                     
-                    <div class="error-log">
-                      <ul>
-                        <!-- Use class "green" or "red" to add color -->
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>
-                        
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li> 
+                    <div class="row">
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
+                      <div class="col-md-4">
+                        <h4><strong>MacBeath</strong></h4>
+                        <p>
+                          19/133, New New York Street<br>
+                          Near Bus Stop, Right side <br>
+                          Mexico, NY - 63442<br>
+                          USA
+                        </p>
+                      </div>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
+                      <div class="col-md-4">
+                        <h4><strong>MacMedia</strong></h4>
+                        <p>
+                          24/133, Mexico Street<br>
+                          Near Airport, Right side <br>
+                          Mexico, CA - 53432<br>
+                          Mexico
+                        </p>                        
+                      </div>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
+                      <div class="col-md-4">
+                        <h4><strong>Invoice</strong></h4>
+                        <p>
+                          <strong>Invoice No</strong> : 52322<br>
+                          <strong>Date</strong> : 12/34/2012<br>
+                          <strong>Account No</strong> : 4290293203
+                        </p>
+                      </div>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>                        
+                    </div>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
+                    <div class="row">
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
+                      <div class="col-md-12">
+                        <hr />
+                        <table class="table table-striped table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Quantity</th>
+                              <th>Unit Price</th>
+                              <th>Tax</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>1</td>
+                              <td>Sony Xperia Pro X1242</td>
+                              <td>5</td>
+                              <td>$534</td>
+                              <td>12.5%</td>
+                              <td>$2424</td>
+                            </tr>     
+                            <tr>
+                              <td>2</td>
+                              <td>Samsung Galaxy Pro</td>
+                              <td>2</td>
+                              <td>$244</td>
+                              <td>12.5%</td>
+                              <td>$5342</td>
+                            </tr>  
+                            <tr>
+                              <td>3</td>
+                              <td>Apple iPhone 5G - Black</td>
+                              <td>7</td>
+                              <td>$434</td>
+                              <td>12.5%</td>
+                              <td>$34524</td>
+                            </tr>  
+                            <tr>
+                              <td>4</td>
+                              <td>Nokia Lumina Tipo - Windows Mobile</td>
+                              <td>4</td>
+                              <td>$754</td>
+                              <td>12.5%</td>
+                              <td>$8866</td>
+                            </tr>  
+                            <tr>
+                              <td>5</td>
+                              <td>Motorola Defy 29323</td>
+                              <td>5</td>
+                              <td>$644</td>
+                              <td>12.5%</td>
+                              <td>$88865</td>
+                            </tr>  
+                            <tr>
+                              <td>6</td>
+                              <td>Micromax Funbook - Android Tablet</td>
+                              <td>9</td>
+                              <td>$434</td>
+                              <td>12.5%</td>
+                              <td>$53535</td>
+                            </tr>                                                                                                                                                                
+                            <tr>  
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td><strong>Total</strong></td>
+                              <td><strong>$2405</strong></td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
+                      </div>
 
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc</li>
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li> 
-
-                        <li><span class="green">[Tue Jan 11 17:32:52 2013]</span> <span class="red">[error]</span> [google 123.124.2.2] client denied by server: /export/home/macadmin/testdoc - no such file</li>                                                                        
-                      </ul>
                     </div>
 
                   </div>
                   <div class="widget-foot">
-                    <!-- Footer goes here -->
+					<div class="pull-right">
+						<button class="btn btn-info btn-sm">Send Invoice</button> &nbsp; 
+						<button class="btn btn-default btn-sm">Cancel</button>
+					</div>
+                    <div class="clearfix"></div>
                   </div>
                 </div>
               </div>  

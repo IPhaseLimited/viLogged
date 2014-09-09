@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <!-- Title and other stuffs -->
-  <title>Post - MacAdmin</title>
+  <title>Gallery - MacAdmin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="keywords" content="">
@@ -56,7 +56,7 @@
 			<span>Menu</span>
 		  </button>
 		  <!-- Site name for smallar screens -->
-		  <a href="index.html" class="navbar-brand hidden-lg">MacBeth</a>
+		  <a href="../index.html" class="navbar-brand hidden-lg">MacBeth</a>
 		</div>
       
       
@@ -144,7 +144,7 @@
             <ul class="dropdown-menu">
               <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
               <li><a href="#"><i class="fa fa-cogs"></i> Settings</a></li>
-              <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+              <li><a href="../login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
             </ul>
           </li>
           
@@ -352,7 +352,7 @@
         <!-- If the main navigation has sub navigation, then add the class "has_sub" to "li" of main navigation. -->
         <ul id="nav">
           <!-- Main menu with font awesome icon -->
-          <li><a href="index.html"><i class="fa fa-home"></i> Dashboard</a>
+          <li><a href="../index.html"><i class="fa fa-home"></i> Dashboard</a>
             <!-- Sub menu markup 
             <ul>
               <li><a href="#">Submenu #1</a></li>
@@ -369,12 +369,12 @@
           </li>  
           <li class="has_sub open"><a href="#"><i class="fa fa-file-o"></i> Pages #1  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
-              <li class="current"><a href="post.html">Post</a></li>
-              <li><a href="login.html">Login</a></li>
+              <li><a href="post.html">Post</a></li>
+              <li><a href="../login.html">Login</a></li>
               <li><a href="register.html">Register</a></li>
               <li><a href="support.html">Support</a></li>
               <li><a href="invoice.html">Invoice</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
+              <li class="current"><a href="gallery.html">Gallery</a></li>
             </ul>
           </li> 
           <li class="has_sub"><a href="#"><i class="fa fa-file-o"></i> Pages #2  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
@@ -386,7 +386,7 @@
               <li><a href="calendar.html">Calendar</a></li>
               <li><a href="grid.html">Grid</a></li>
             </ul>
-          </li>                
+          </li>             
 		  <li class="has_sub"><a href="#"><i class="fa fa-table"></i> Tables  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="tables.html">Tables</a></li>
@@ -406,11 +406,11 @@
 
       <!-- Page heading -->
       <div class="page-head">
-        <h2 class="pull-left"><i class="fa fa-home"></i> Post</h2>
+        <h2 class="pull-left"><i class="fa fa-file-o"></i> Gallery</h2>
 
         <!-- Breadcrumb -->
         <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="fa fa-home"></i> Home</a> 
+          <a href="../index.html"><i class="fa fa-home"></i> Home</a>
           <!-- Divider -->
           <span class="divider">/</span> 
           <a href="#" class="bread-current">Dashboard</a>
@@ -421,17 +421,16 @@
       </div>
       <!-- Page heading ends -->
 
-
 	    <!-- Matter -->
 
 	    <div class="matter">
         <div class="container">
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
 
               <div class="widget">
                 <div class="widget-head">
-                  <div class="pull-left">Make Post</div>
+                  <div class="pull-left">Gallery</div>
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
                     <a href="#" class="wclose"><i class="fa fa-times"></i></a>
@@ -441,80 +440,19 @@
                 <div class="widget-content">
                   <div class="padd">
                     
-					<form class="form">
-						<input type="text" class="form-control col-lg-8" placeholder="Enter Title">
-						<br /><br />
-						
-						<input type="file" >
-						
-						<div class="text-area">
-							<!-- Add the "cleditor" to textarea to add CLeditor -->
-							<textarea class="cleditor" name="input"></textarea>
-
-						</div>
-						
-						<div class="clearfix"></div>
-					
-					</form>
-
-                  </div>
-                  <div class="widget-foot">
-                    Word Count : 205
-                  </div>
-                </div>
-              </div>   
-              
-            </div>
-
-            <!-- post sidebar -->
-
-            <div class="col-md-4">
-
-              <div class="widget">
-                <div class="widget-head">
-                  <div class="pull-left">Details</div>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="fa fa-times"></i></a>
-                  </div>  
-                  <div class="clearfix"></div>
-                </div>
-                <div class="widget-content">
-                  <div class="padd">
-
-                    <form class="form">
-
-                      <h6><strong>Category</strong></h6>
-						<div class="checkbox">
-							<label>
-							  <input type="checkbox"> Medicine
-							</label>
-						</div>
-						<div class="checkbox">
-							<label>
-							  <input type="checkbox"> Health
-							</label>
-						</div>
-						<div class="checkbox">
-							<label>
-							  <input type="checkbox"> Allopathy
-							</label>
-						</div>						
-	
-					  <hr />
-						
-                      <h6><strong>Tags</strong></h6>
-                      <input class="form-control col-lg-12" type="text" placeholder="Tags">
-						
-						<div class="clearfix"></div>
-						
-					<div class="buttons">
-                      <button class="btn btn-sm btn-default">Save Draft</button> 
-                      <button class="btn btn-sm btn-info">Publish</button>
-                      <button class="btn btn-sm btn-danger">Trash</button>
-					</div>
-
-                    </form>
+                    <div class="gallery">
+                      <!-- Full size image link in anchor tag. Thumbnail link in image tag. -->
+                      <a href="img/photos/s1.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t1.jpg" alt=""></a>
+                      <a href="img/photos/s2.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t2.jpg" alt=""></a>
+                      <a href="img/photos/s3.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t3.jpg" alt=""></a>
+                      <a href="img/photos/s4.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t4.jpg" alt=""></a>
+                      <a href="img/photos/s5.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t5.jpg" alt=""></a>
+                      <a href="img/photos/s6.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t6.jpg" alt=""></a>
+                      <a href="img/photos/s7.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t7.jpg" alt=""></a>
+                      <a href="img/photos/s8.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t8.jpg" alt=""></a>
+                      <a href="img/photos/s9.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t9.jpg" alt=""></a>
+                      <a href="img/photos/s10.jpg" class="prettyPhoto[pp_gal]"><img src="img/photos/t10.jpg" alt=""></a>    
+                    </div>
 
                   </div>
                   <div class="widget-foot">
@@ -522,9 +460,8 @@
                   </div>
                 </div>
               </div>  
-
+              
             </div>
-
           </div>
         </div>
 		  </div>
@@ -533,7 +470,7 @@
 
     </div>
 
-   <!-- Mainbar ends -->	    	
+   <!-- Mainbar ends -->	    
    <div class="clearfix"></div>
 
 </div>

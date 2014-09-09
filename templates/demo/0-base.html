@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <!-- Title and other stuffs -->
-  <title>Calendar - MacAdmin</title>
+  <title>MacAdmin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="keywords" content="">
@@ -28,7 +28,7 @@
   <!-- CLEditor -->
   <link rel="stylesheet" href="css/jquery.cleditor.css">  
   <!-- Data tables -->
-  <link rel="stylesheet" href="css/jquery.dataTables.css">
+  <link rel="stylesheet" href="css/jquery.dataTables.css"> 
   <!-- Bootstrap toggle -->
   <link rel="stylesheet" href="css/jquery.onoff.css">
   <!-- Main stylesheet -->
@@ -56,7 +56,7 @@
 			<span>Menu</span>
 		  </button>
 		  <!-- Site name for smallar screens -->
-		  <a href="index.html" class="navbar-brand hidden-lg">MacBeth</a>
+		  <a href="../index.html" class="navbar-brand hidden-lg">MacBeth</a>
 		</div>
       
       
@@ -144,7 +144,7 @@
             <ul class="dropdown-menu">
               <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
               <li><a href="#"><i class="fa fa-cogs"></i> Settings</a></li>
-              <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+              <li><a href="../login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
             </ul>
           </li>
           
@@ -352,7 +352,7 @@
         <!-- If the main navigation has sub navigation, then add the class "has_sub" to "li" of main navigation. -->
         <ul id="nav">
           <!-- Main menu with font awesome icon -->
-          <li><a href="index.html"><i class="fa fa-home"></i> Dashboard</a>
+          <li><a href="../index.html"><i class="fa fa-home"></i> Dashboard</a>
             <!-- Sub menu markup 
             <ul>
               <li><a href="#">Submenu #1</a></li>
@@ -370,23 +370,23 @@
           <li class="has_sub"><a href="#"><i class="fa fa-file-o"></i> Pages #1  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="post.html">Post</a></li>
-              <li><a href="login.html">Login</a></li>
+              <li><a href="../login.html">Login</a></li>
               <li><a href="register.html">Register</a></li>
               <li><a href="support.html">Support</a></li>
               <li><a href="invoice.html">Invoice</a></li>
               <li><a href="gallery.html">Gallery</a></li>
             </ul>
           </li> 
-          <li class="has_sub open"><a href="#"><i class="fa fa-file-o"></i> Pages #2  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+          <li class="has_sub"><a href="#"><i class="fa fa-file-o"></i> Pages #2  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="media.html">Media</a></li>
               <li><a href="statement.html">Statement</a></li>
               <li><a href="error.html">Error</a></li>
               <li><a href="error-log.html">Error Log</a></li>
-              <li class="current"><a href="calendar.html">Calendar</a></li>
+              <li><a href="calendar.html">Calendar</a></li>
               <li><a href="grid.html">Grid</a></li>
             </ul>
-          </li> 
+          </li>      
 		  <li class="has_sub"><a href="#"><i class="fa fa-table"></i> Tables  <span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
             <ul>
               <li><a href="tables.html">Tables</a></li>
@@ -406,11 +406,11 @@
 
       <!-- Page heading -->
       <div class="page-head">
-        <h2 class="pull-left"><i class="fa fa-file-o"></i> Calendar</h2>
+        <h2 class="pull-left"><i class="fa fa-home"></i> Dashboard</h2>
 
         <!-- Breadcrumb -->
         <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="fa fa-home"></i> Home</a> 
+          <a href="../index.html"><i class="fa fa-home"></i> Home</a>
           <!-- Divider -->
           <span class="divider">/</span> 
           <a href="#" class="bread-current">Dashboard</a>
@@ -428,11 +428,10 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <!-- Widget -->
+
               <div class="widget">
-                <!-- Widget title -->
                 <div class="widget-head">
-                  <div class="pull-left">Calendar</div>
+                  <div class="pull-left">Title</div>
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
                     <a href="#" class="wclose"><i class="fa fa-times"></i></a>
@@ -440,13 +439,15 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
-                  <!-- Widget content -->
                   <div class="padd">
-                    <!-- Below line produces calendar. I am using FullCalendar plugin. -->
-                    <div id="calendar"></div>
+                    <!-- Content goes here -->
+                  </div>
+                  <div class="widget-foot">
+                    <!-- Footer goes here -->
                   </div>
                 </div>
-              </div> 
+              </div>  
+              
             </div>
           </div>
         </div>
@@ -456,7 +457,7 @@
 
     </div>
 
-   <!-- Mainbar ends -->	   
+   <!-- Mainbar ends -->	    	
    <div class="clearfix"></div>
 
 </div>
