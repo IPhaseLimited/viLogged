@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django_filters',
     'django_extensions',
     'core',
+    'appointments',
 
     # Uncomment the next line to enable the admin:
     'grappelli',
