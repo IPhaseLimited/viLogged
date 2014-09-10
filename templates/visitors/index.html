@@ -28,30 +28,42 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Full Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Tag No</th>
-              <th>Checked In</th>
+              <th>State of Origin</th>
+              <th>LGA</th>
               <th>Date last Visited</th>
-              <th>Host</th>
-              <th>Host Phone</th>
-              <th>Department</th>
+              <th>Group</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
+
+          {% for row in object_list %}
+
             <tr>
-              <td>1</td>
-              <td>Micheal Alabi</td>
-              <td>alabim@staffbox.com</td>
-              <td>080886733399</td>
-              <td>NCC00012</td>
-              <td>2014-09-4 10:11</td>
-              <td>2nd Aug 2014</td>
-              <td>Hassan Abdullahi</td>
-              <td>08023453344</td>
-              <td>Engineering</td>
+              <td>{{ forloop.counter }}</td>
+
+              <td>{{ row.first_name }}</td>
+              <td>{{ row.last_name }}</td>
+              <td>{{ row.visitors_email }}</td>
+              <td>{{ row.visitors_phone }}</td>
+              <td>{{ row.visitors_state }}</td>
+              <td>{{ row.lga }}</td>
+              <td>{{ row.last_visit }}</td>
+              <td>{{ row.group }}</td>
+              <td>
+                <a id="edit" class="btn btn-default" title="edit">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a id="remove" class="btn btn-default" title="edit">
+                  <i class="fa fa-times"></i>
+                </a>
+              </td>
             </tr>
+    {% endfor %}
           </tbody>
           </table>
 
@@ -64,4 +76,8 @@
 
 </div>
 
+{% endblock %}
+
+{% block custom_js %}
+  <script src="/static/custom/js/visitors.js"></script>
 {% endblock %}

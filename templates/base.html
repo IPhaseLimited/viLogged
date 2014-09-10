@@ -85,7 +85,7 @@
         <ul class="nav navbar-nav pull-right">
           <li class="dropdown pull-right">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-              <i class="fa fa-user"></i> Admin <b class="caret"></b>
+              <i class="fa fa-user"></i> {{ user.username | title }} <b class="caret"></b>
             </a>
 
             <!-- Dropdown menu -->
@@ -268,6 +268,7 @@
 <script src="/static/js/filter.js"></script> <!-- Filter for support page -->
 <script src="/static/js/custom.js"></script> <!-- Custom codes -->
 <script src="/static/js/charts.js"></script> <!-- Charts & Graphs -->
+<script src="/static/custom/js/common.js"></script> <!-- Charts & Graphs -->
 {% block custom_js %}{% endblock %}
 
 

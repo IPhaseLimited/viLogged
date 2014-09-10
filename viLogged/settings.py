@@ -126,6 +126,10 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
+FIXTURE_DIRS = (
+   os.path.join(PROJECT_ROOT, "core/fixtures"),
+)
+
 FILE_UPLOAD_PERMISSIONS = 0644
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
