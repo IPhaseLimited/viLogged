@@ -61,13 +61,14 @@ class Visitors(HistoryFieldsMixin):
     company_name = models.CharField(max_length=50, blank=True, null=True)
     company_address = models.CharField(max_length=100, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
+    nationality = models.CharField(max_length=20, blank=True, null=True)
     state_of_origin = models.CharField(max_length=50, blank=True, null=True)
     lga = models.CharField(max_length=50, blank=True, null=True)
     image_url = models.ImageField(upload_to='images', blank=True, null=True)
     fingerprint = models.ImageField(upload_to='finger_prints', max_length=100, blank=True, null=True)
     scanned_signature = models.ImageField(upload_to='signature', max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
-    group_id = models.ForeignKey(VisitorGroup, to_field='uuid')
+    group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True)
 
     class Meta:
         app_label = 'core'

@@ -2,6 +2,7 @@ from django import forms
 from core.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+import uuid
 
 
 class UserProfileFrom(forms.ModelForm):
@@ -38,20 +39,12 @@ class VisitorsForm(forms.ModelForm):
         model = Visitors
         fields = ['first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_id',
                   'state_of_origin', 'lga', 'image_url', 'occupation', 'company_name', 'company_address',
-                  'fingerprint', 'scanned_signature', 'visitors_pass_code']
-        widgets = {
-            'group_id': forms.Select(attrs={"class": "form-control"}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'visitors_email': forms.TextInput(attrs={'class': 'form-control'}),
-            'visitors_phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.TextInput(attrs={'class': 'form-control'}),
-            'state_of_origin': forms.TextInput(attrs={'class': 'form-control'}),
-            'lga': forms.TextInput(attrs={'class': 'form-control'}),
-            'image_url': forms.FileInput(attrs={'class': 'form-control'}),
-            'occupation': forms.TextInput(attrs={'class': 'form-control'}),
-            'company_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'company_address': forms.TextInput(attrs={'class': 'form-control'}),
-            'fingerprint': forms.FileInput(attrs={'class': 'form-control'}),
-            'scanned_signature': forms.FileInput(attrs={'class': 'form-control'}),
-            'visitors_pass_code': forms.TextInput(attrs={'class': 'form-control'}),
-        }
+                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality']
+
+    def save(self, commit=True):
+        visitor = super(VisitorsForm, self).save(commit=False)
+        if visitor.uuid is None:
+            visitor.uuid = uuid.uuid4()
+        if commit:
+            visitor.save()
+        return visitor

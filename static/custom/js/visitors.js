@@ -22,4 +22,8 @@ $(document).ready(function() {
       }
     });
   });
+  $( "#date_of_birth" ).datepicker({changeYear: true,
+                                     dateFormat: "yy-mm-dd",
+                                     minDate: new Date('1940'),
+                                     maxDate: 'now'});
 });

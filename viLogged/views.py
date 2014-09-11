@@ -131,19 +131,29 @@ class StaffFormView(LoginRequiredMixin, FormView):
             return render(request, self.template_name, context)
 
 
-class VisitorsFromView(LoginRequiredMixin, FormView):
+class VisitorsFormView(LoginRequiredMixin, FormView):
     template_name = 'visitors/form.html'
 
     def get(self, request, *args, **kwargs):
 
-        context = super(VisitorsFromView, self).get_context_data(**kwargs)
-        context['visitors_form'] = VisitorsForm
+        context = super(VisitorsFormView, self).get_context_data(**kwargs)
+        context['form'] = VisitorsForm()
+        context['users_profile'] = UserProfile.objects.all()
+        context['groups'] = VisitorGroup.objects.all()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = super(VisitorsFromView, self).get_context_data(**kwargs)
+        context = super(VisitorsFormView, self).get_context_data(**kwargs)
+        context['users_profile'] = UserProfile.objects.all()
+        context['groups'] = VisitorGroup.objects.all()
+        form = VisitorsForm(request.POST)
+        if form.is_valid():
+            new_visitor = form.save()
 
-        return HttpResponseRedirect('/manage/vaccine-cooler-setup')
+            return HttpResponseRedirect("/visitors/")
+        else:
+            context['form'] = form
+            return render(request, self.template_name, context)
 
 
 class Reports(LoginRequiredMixin, ListView):
