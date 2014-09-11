@@ -18,6 +18,146 @@
         </div>
         <div class="widget-content">
           <div style="padding: 40px;">
+          <form class="form-horizontal" enctype="multipart/form-data" method="POST" action="/rest/visitors/">
+          <fieldset>
+
+
+            <div class="control-group error">
+              <label class="control-label" for="first_name">First Name:</label>
+              <div class="controls">
+                {{ visitors_form.first_name }}
+
+                <span class="help-block">This field is required.</span>
+              </div>
+            </div>
+
+            <div class="control-group error">
+              <label class="control-label" for="last_name">Last Name:</label>
+              <div class="controls">
+                <input type="text" name="last_name" id="last_name">
+
+                <span class="help-block">This field is required.</span>
+              </div>
+            </div>
+
+            <div class="control-group error">
+              <label class="control-label" for="visitors_email">visitors email:</label>
+              <div class="controls">
+                <input type="text" name="visitors_email" id="visitors_email">
+
+                <span class="help-block">This field is required.</span>
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="visitors_phone">visitors phone:</label>
+              <div class="controls">
+                <input type="text" value="0" name="visitors_phone" id="visitors_phone">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="occupation">occupation:</label>
+              <div class="controls">
+                <input type="text" name="occupation" id="occupation">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="company_name">company name:</label>
+              <div class="controls">
+                <input type="text" name="company_name" id="company_name">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="company_address">company address:</label>
+              <div class="controls">
+                <input type="text" name="company_address" id="company_address">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="date_of_birth">date of birth:</label>
+              <div class="controls">
+                <input type="text" name="date_of_birth" id="date_of_birth">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="state_of_origin">state of origin:</label>
+              <div class="controls">
+                <input type="text" name="state_of_origin" id="state_of_origin">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="lga">lga:</label>
+              <div class="controls">
+                <input type="text" name="lga" id="lga">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="image_url">image url:</label>
+              <div class="controls">
+                <input type="file" name="image_url" id="image_url">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="fingerprint">fingerprint:</label>
+              <div class="controls">
+                <input type="file" name="fingerprint" id="fingerprint">
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="scanned_signature">scanned signature:</label>
+              <div class="controls">
+                <input type="file" name="scanned_signature" id="scanned_signature">
+
+              </div>
+            </div>
+
+            <div class="control-group ">
+              <label class="control-label" for="visitors_pass_code">visitors pass code:</label>
+              <div class="controls">
+                <input type="text" name="visitors_pass_code" id="visitors_pass_code">
+
+
+              </div>
+            </div>
+
+
+
+            <div class="control-group error">
+              <label class="control-label" for="group_id">group id:</label>
+              <div class="controls">
+                <select name="group_id" id="group_id">
+                </select>
+
+                <span class="help-block">This field is required.</span>
+              </div>
+            </div>
+
+
+
+            <div class="form-actions">
+              <button title="Make a POST request on the Visitors List resource" class="btn btn-primary">POST</button>
+            </div>
+          </fieldset>
+            {% csrf_token %}
+          </form>
+            <!--
               <form class="form-horizontal" name="visitorsForm" id="visitorsForm" enctype="multipart/form-data" method="POST">
                 <fieldset>
                   {% csrf_token %}
@@ -109,6 +249,7 @@
                   </div>
                 </fieldset>
               </form>
+            -->
             </div>
           <div class="widget-foot">
             <!-- Footer goes here -->

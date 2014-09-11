@@ -1338,7 +1338,7 @@ header .header-data .hdata em{
 
 .error-page .container{
 	max-width:100%;
-	width:100%:
+	width:100%;
 }
 
 .error h1{
@@ -1808,4 +1808,7 @@ footer .copy{
 		padding: 0px;
 		display: none;
 	}
+}
+.pointer{
+  cursor: pointer;
 }

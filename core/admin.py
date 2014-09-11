@@ -21,8 +21,9 @@ class VisitorsAdmin(admin.ModelAdmin):
 
     #prepopulated_fields = {'uuid': (uuid.uuid4(),)}
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -31,8 +32,9 @@ class VisitorGroupAdmin(admin.ModelAdmin):
     list_display = ('group_name', 'black_listed')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -41,39 +43,22 @@ class VisitorsLocationAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
-        obj.save()
-
-
-class VisitStatusAdmin(admin.ModelAdmin):
-    list_display = ('visitor_id', 'checked_in', 'checked_out', 'entrance_id')
-    readonly_fields = ('uuid', 'changed_by')
-
-    def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
 class AppointmentsAdmin(admin.ModelAdmin):
     list_display = ('visitor_id', 'representing', 'purpose', 'arrival_date', 'departure_date', 'visit_start_time',
-                    'visit_end_time', 'host_id', 'escort_required')
+                    'visit_end_time', 'host_id', 'escort_required', 'approved', 'expired', 'checked_in', 'checked_out',
+                    'entrance_id')
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
-        obj.save()
-
-
-class AppointmentsStatusAdmin(admin.ModelAdmin):
-    list_display = ('appointment_id', 'approved', 'expired')
-    readonly_fields = ('uuid', 'changed_by')
-
-    def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -82,8 +67,9 @@ class VehicleAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -92,8 +78,9 @@ class MessageQueueAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -102,8 +89,9 @@ class DocumentManagementAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 class CompanyEntranceNamesAdmin(admin.ModelAdmin):
@@ -111,8 +99,9 @@ class CompanyEntranceNamesAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 
@@ -121,8 +110,9 @@ class CompanyDepartmentsAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
-        obj.uuid = uuid.uuid4()
-        obj.changed_by = request.user
+        if obj.uuid is None:
+            obj.uuid = uuid.uuid4()
+            obj.changed_by = request.user
         obj.save()
 
 admin.site.unregister(User)
@@ -131,10 +121,8 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Visitors, VisitorsAdmin)
 admin.site.register(VisitorGroup, VisitorGroupAdmin)
 admin.site.register(VisitorsLocation, VisitorsLocationAdmin)
-admin.site.register(VisitStatus, VisitStatusAdmin)
 admin.site.register(Vehicle, VehicleAdmin)
 admin.site.register(Appointments, AppointmentsAdmin)
-admin.site.register(AppointmentsStatus, AppointmentsStatusAdmin)
 admin.site.register(MessageQueue, MessageQueueAdmin)
 admin.site.register(DocumentManagement, DocumentManagementAdmin)
 admin.site.register(CompanyEntranceNames, CompanyEntranceNamesAdmin)

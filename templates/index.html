@@ -25,27 +25,26 @@
               <th>Full Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Tag No</th>
               <th>Checked In</th>
-              <th>Date last Visited</th>
               <th>Host</th>
               <th>Host Phone</th>
               <th>Department</th>
             </tr>
           </thead>
           <tbody>
+          {% for row in in_progress %}
             <tr>
               <td>1</td>
-              <td>Micheal Alabi</td>
-              <td>alabim@staffbox.com</td>
-              <td>080886733399</td>
-              <td>NCC00012</td>
-              <td>2014-09-4 10:11</td>
-              <td>2nd Aug 2014</td>
-              <td>Hassan Abdullahi</td>
-              <td>08023453344</td>
-              <td>Engineering</td>
+              <td>{{ row.visitor_id.first_name }} {{ row.visitor_id.last_name }}</td>
+              <td>{{ row.visitor_id.visitors_email }}</td>
+              <td>{{ row.visitor_id.visitors_phone }}</td>
+              <td>{{ row.appointment_id }}</td>
+              <td>{{ row.checked_in }}</td>
+              <td>{{ row.host_id }}</td>
+              <td>{{ row.host_id.phone }}</td>
+              <td>{{ row.host_id.department }}</td>
             </tr>
+          {% endfor %}
           </tbody>
           </table>
 
@@ -82,19 +81,21 @@
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Last Visit Date</th>
+                <!--th>Last Visit Date</th-->
                 <th>Offence</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Tom Craft</td>
-                <td>tcraft@mailbox.com</td>
-                <td>080886733399</td>
-                <td>2nd Aug 2014</td>
-                <td>Murder</td>
-              </tr>
+              {% for row in black_listed %}
+            <tr>
+              <td>1</td>
+              <td>{{ row.first_name }} {{ row.visitor_id.last_name }}</td>
+              <td>{{ row.visitors_email }}</td>
+              <td>{{ row.visitors_phone }}</td>
+              <!--td>{{ row.checked_in }}</td-->
+              <td>{{ row.offence }}</td>
+            </tr>
+          {% endfor %}
             </tbody>
           </table>
 
@@ -135,18 +136,20 @@
             </tr>
           </thead>
           <tbody>
+            {% for row in approved %}
             <tr>
               <td>1</td>
-              <td>Crawford Derick</td>
-              <td>Jame Irene</td>
-              <th>Information Tech</th>
-              <td>2014-09-4</td>
-              <td>11:30 am</td>
-              <td>03:30 pm</td>
+              <td>{{ row.visitor_id.first_name }} {{ row.visitor_id.last_name }}</td>
+              <td>{{ row.host_id }}</td>
+              <td>{{ row.host_id.phone }}</td>
+              <td>{{ row.host_id.department }}</td>
+              <td>{{ row.arrival_date }}</td>
+              <td>{{ row.visitor_start_time }}</td>
+              <td>{{ row.visit_end_time }}</td>
             </tr>
+          {% endfor %}
           </tbody>
           </table>
-
 
         <div class="widget-foot">
         </div>

@@ -5,7 +5,7 @@ South
 django-extensions
 django-filter
 django-grappelli==2.4.5
-django-mssql==1.6.1
+django-mssql==1.5
 djangorestframework
 pyusb
 pywin32==219

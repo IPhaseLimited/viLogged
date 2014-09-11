@@ -16,8 +16,10 @@ class CompanyDepartments(HistoryFieldsMixin):
 
 
 class UserProfile(models.Model):
-    user_id = models.OneToOneField(User, default=1)
-    phone = models.IntegerField(max_length=50)
+    user_id = models.OneToOneField(User, unique=True, blank=True, null=True)
+    phone = models.CharField(max_length=20, unique=True)
+    home_phone = models.CharField(max_length=20, blank=True, null=True)
+    work_phone = models.CharField(max_length=20, blank=True, null=True)
     department = models.ForeignKey(CompanyDepartments, to_field='uuid', blank=True, null=True)
     designation = models.CharField(max_length=50, blank=True, null=True)
     image_url = models.ImageField(upload_to='images', blank=True, null=True)
@@ -30,7 +32,7 @@ class UserProfile(models.Model):
 
 
 class CompanyEntranceNames(HistoryFieldsMixin):
-    entrance_name = models.CharField(max_length=50)
+    entrance_name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         app_label = 'core'
@@ -40,7 +42,7 @@ class CompanyEntranceNames(HistoryFieldsMixin):
 
 
 class VisitorGroup(HistoryFieldsMixin):
-    group_name = models.CharField(max_length=50)
+    group_name = models.CharField(max_length=50, unique=True)
     black_listed = models.BooleanField(default=False)
 
     class Meta:
@@ -54,7 +56,7 @@ class Visitors(HistoryFieldsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     visitors_email = models.EmailField(max_length=50, unique=True)
-    visitors_phone = models.IntegerField(max_length=20)
+    visitors_phone = models.CharField(max_length=20)
     occupation = models.CharField(max_length=50, blank=True, null=True)
     company_name = models.CharField(max_length=50, blank=True, null=True)
     company_address = models.CharField(max_length=100, blank=True, null=True)
@@ -81,29 +83,21 @@ class VisitorsLocation(HistoryFieldsMixin):
     contact_address = models.CharField(max_length=100)
 
 
-class VisitStatus(HistoryFieldsMixin):
-    visitor_id = models.ForeignKey(Visitors, blank=True, null=True, to_field="uuid")
-    checked_in = models.DateTimeField(default="0000-00-00 00:00:00", blank=True, null=True)
-    checked_out = models.DateTimeField(blank=True, null=True)
-    entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid")
-
-
 class Appointments(HistoryFieldsMixin):
     visitor_id = models.ForeignKey(Visitors, to_field="uuid")
-    representing = models.CharField(max_length=100)
-    purpose = models.CharField(max_length=50)
+    representing = models.CharField(max_length=100, blank=True, null=True)
+    purpose = models.CharField(max_length=50, blank=True, null=True)
     arrival_date = models.DateField()
     departure_date = models.DateField()
     visit_start_time = models.TimeField()
     visit_end_time = models.TimeField()
     host_id = models.ForeignKey(UserProfile, blank=True, null=True)
     escort_required = models.BooleanField(default=False)
-
-
-class AppointmentsStatus(HistoryFieldsMixin):
-    appointment_id = models.ForeignKey(Appointments, blank=True, null=True, to_field="uuid")
     approved = models.BooleanField(default=False)
     expired = models.BooleanField(default=False)
+    checked_in = models.DateTimeField(default=None, blank=True, null=True)
+    checked_out = models.DateTimeField(blank=True, null=True)
+    entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid")
 
 
 class Vehicle(HistoryFieldsMixin):
@@ -133,5 +127,5 @@ class DocumentManagement(HistoryFieldsMixin):
     document_name = models.CharField(max_length=50)
     document_code = models.CharField(max_length=50)
     linked_user = models.ForeignKey(Visitors, to_field='uuid', blank=True, null=True)
-    checked_in = models.DateTimeField(blank=True, null=True, default="0000-00-00 00:00:00")
-    checked_out = models.DateTimeField(blank=True, null=True, default="0000-00-00 00:00:00")
+    checked_in = models.DateTimeField(blank=True, null=True, default=None)
+    checked_out = models.DateTimeField(blank=True, null=True, default=None)
