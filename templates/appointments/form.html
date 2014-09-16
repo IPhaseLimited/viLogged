@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block pageTitle %}<i class="fa fa-users"></i> Visitors Entry Form {% endblock %}
+{% block breadcrumb %}
+  <span class="divider">/</span>
+  <a href="#" class="bread-current">Visitors</a>
+{% endblock %}
+{% block main-content %}
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="widget">
+        <div class="widget-head">
+
+          <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
+            <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="widget-content">
+          <div style="padding: 40px;">
+            <form class="form-horizontal" action="" method="post" name="formID" id="formID">
+
+              <div class="form-group">
+                <label for="visitor_id">Visitor</label>
+                <select id="visitor_id" name="visitor_id" class="form-control">
+                  <option value="">Select Visitor</option>
+                  {% for visitor in visitors %}
+                  <option {% ifequal form.visitor_id.value visitor.uuid %} selected="selected" {% endifequal %}
+                    value="{{ visitor.uuid }}">{{ visitor.first_name }} {{ visitor.last_name }}</option>
+                  {% endfor %}
+                </select>
+              {% if form.errors.visitor_id %}<span class="text-danger bold">{{ form.visitor_id.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="host_id">Host</label>
+                <select id="host_id" name="host_id" class="form-control">
+                  <option value="">Select Host</option>
+                  {% for host in users_profile %}
+                  <option {% ifequal form.host_id.value host.id %} selected="selected" {% endifequal %}
+                    value="{{ host.id }}">{{ host.user_id.first_name }} {{ host.user_id.last_name }}</option>
+                  {% endfor %}
+                </select>
+              {% if form.errors.host_id %}<span class="text-danger bold">{{ form.host_id.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="representing">Representing</label>
+                <input id="representing" type="text" name="representing" class="form-control" value="{% ifnotequal form.representing.value None %}{{ form.representing.value }}{% endifnotequal %}">
+                {% if form.errors.representing %}<span class="text-danger bold">{{ form.representing.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="purpose">Purpose</label>
+                <input id="purpose" type="text" name="purpose" class="form-control" value="{% ifnotequal form.purpose.value None %}{{ form.purpose.value }}{% endifnotequal %}">
+                {% if form.errors.purpose %}<span class="text-danger bold">{{ form.purpose.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="arrival_date">Arrival Date</label>
+                <input id="arrival_date" type="text" name="arrival_date" class="form-control" value="{% ifnotequal form.arrival_date.value None %}{{ form.arrival_date.value }}{% endifnotequal %}">
+                {% if form.errors.arrival_date %}<span class="text-danger bold">{{ form.arrival_date.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="departure_date">Departure Date</label>
+                <input id="departure_date" type="text" name="departure_date" class="form-control" value="{% ifnotequal form.departure_date.value None %}{{ form.departure_date.value }}{% endifnotequal %}">
+                {% if form.errors.departure_date %}<span class="text-danger bold">{{ form.departure_date.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="visit_start_time">Visit Start Time</label>
+                <div id="_visit_start_time" class="input-append input-group dtpicker">
+                  <input data-format="hh:mm:ss" id="visit_start_time" type="text" name="visit_start_time" class="form-control" value="{% ifnotequal form.visit_start_time.value None %}{{ form.visit_start_time.value }}{% endifnotequal %}">
+                   <span class="input-group-addon add-on pointer">
+                    <i data-time-icon="fa fa-clock-o" data-date-icon="fa fa-calendar"></i>
+                  </span>
+                </div>
+                {% if form.errors.visit_start_time %}<span class="text-danger bold">{{ form.visit_start_time.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="visit_end_time">Visit End Time</label>
+                <div id="_visit_end_time" class="input-append input-group dtpicker">
+                  <input data-format="hh:mm:ss" id="visit_end_time" type="text" name="visit_end_time" class="form-control" value="{% ifnotequal form.visit_end_time.value None %}{{ form.visit_end_time.value }}{% endifnotequal %}">
+                  <span class="input-group-addon add-on pointer">
+                    <i data-time-icon="fa fa-clock-o" data-date-icon="fa fa-calendar"></i>
+                  </span>
+                </div>
+                {% if form.errors.visit_end_time %}<span class="text-danger bold">{{ form.visit_end_time.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="escort_required">Escort Required</label>
+                <input id="escort_required" type="checkbox" name="escort_required" value="{% ifnotequal form.escort_required.value None %}{{ form.escort_required.value }}{% endifnotequal %}">
+                {% if form.errors.escort_required %}<span class="text-danger bold">{{ form.escort_required.errors|striptags  }} </span>{% endif %}
+              </div>
+
+
+              <div class="form-group">
+                <div class="pull-right">
+                  <input class="btn btn-primary" type="submit" value="Create account">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+              {% csrf_token %}
+            </form>
+
+          </div>
+          <div class="widget-foot">
+            <!-- Footer goes here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block custom_js %}
+<script type="application/javascript">
+$(function() {
+  $('#_visit_start_time').datetimepicker({
+    pickDate: false
+  });
+  $('#_visit_end_time').datetimepicker({
+    pickDate: false
+  });
+  $( "#arrival_date" ).datepicker({changeYear: true,
+    dateFormat: "yy-mm-dd",
+    minDate: new Date()
+  });
+  $( "#departure_date" ).datepicker({changeYear: true,
+    dateFormat: "yy-mm-dd",
+    minDate: new Date()
+  });
+});
+</script>
+{% endblock %}

@@ -2,15 +2,12 @@ import json
 import datetime
 from django.contrib import messages
 import simplejson
-from django.contrib.auth.views import login_required, login as django_login, logout as django_logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, ListView, FormView
 from braces.views import LoginRequiredMixin
-from core.models import Visitors, VisitorsLocation, Vehicle, Appointments
 from core.forms.core_forms import *
 from core.models import UserProfile
-
 
 
 def json_response(func):
@@ -53,32 +50,6 @@ class JSONResponseMixin(object):
         # objects -- such as Django model instances or querysets
         # -- can be serialized as JSON.
         return json.dumps(context)
-
-@login_required
-def home(request, *args, **kwargs):
-    approved = Appointments.objects.all().filter(approved=True).select_related()
-    in_progress = Appointments.objects.all().select_related()
-    black_listed = Visitors.objects.all().filter(group_id__black_listed=True).select_related()
-
-    context = {
-        'approved': approved,
-        'in_progress': in_progress,
-        'black_listed': black_listed
-    }
-    return render(request, 'index.html', context)
-
-
-class HomePageView(LoginRequiredMixin, TemplateView):
-    template_name = 'index.html'
-
-
-class VisitorsListView(LoginRequiredMixin, ListView):
-    template_name = 'visitors/index.html'
-    model = Visitors
-
-    def get_queryset(self):
-        query = self.model.objects.all().select_related()
-        return query
 
 
 class StaffsListView(LoginRequiredMixin, ListView):
@@ -131,64 +102,34 @@ class StaffFormView(LoginRequiredMixin, FormView):
             return render(request, self.template_name, context)
 
 
-class VisitorsFormView(LoginRequiredMixin, FormView):
-    template_name = 'visitors/form.html'
-
-    def get(self, request, *args, **kwargs):
-
-        context = super(VisitorsFormView, self).get_context_data(**kwargs)
-        context['form'] = VisitorsForm()
-        context['users_profile'] = UserProfile.objects.all()
-        context['groups'] = VisitorGroup.objects.all()
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(VisitorsFormView, self).get_context_data(**kwargs)
-        context['users_profile'] = UserProfile.objects.all()
-        context['groups'] = VisitorGroup.objects.all()
-        form = VisitorsForm(request.POST)
-        if form.is_valid():
-            new_visitor = form.save()
-
-            return HttpResponseRedirect("/visitors/")
-        else:
-            context['form'] = form
-            return render(request, self.template_name, context)
-
-
-class Reports(LoginRequiredMixin, TemplateView):
-    template_name = 'reports/index.html'
-    model = Visitors
-
-    def get_queryset(self):
-        query = self.model.objects.all().select_related()
-        return query
-
-
-class UserProfileView(LoginRequiredMixin, TemplateView):
+def user_profile_view(request, *args, **kwargs):
     template_name = 'staff/profile.html'
+    context = {}
+    if request.is_ajax():
+        appointment = Appointments.objects.get(uuid=kwargs['uuid'])
+        appointment.approved = True
+        appointment.save()
+        approved_list = Appointments.objects.all().filter(approved=True, host_id=kwargs['pk'])
+        html = ""
+        for approved in approved_list:
+            html += '<tr id="approve-{}">'.format(approved.uuid)
+            html += '  <td><a id="view-visitor-detail" class="pointer">{0} {1}</a></td>'.format(approved.visitor_id.first_name, approved.visitor_id.last_name)
+            html += '  <td>{}</td>'.format(approved.visitor_id.visitors_phone)
+            html += '  <td>{0} {1}</td>'.format(approved.arrival_date, approved.visit_start_time)
+            html += '  <td>{0} {1}</td>'.format(approved.departure_date, approved.visit_end_time)
+            html += '</tr>'
+        data = simplejson.dumps({"html": html})
 
-    def get(self, request, *args, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
+        return HttpResponse(data, content_type='application/json')
+
+    else:
         try:
-            user_profile = UserProfile.objects.get(id=self.kwargs['pk'])
-
+            user_profile = UserProfile.objects.get(id=kwargs['pk'])
         except KeyError:
             user_profile = UserProfile.objects.get(user_id=request.user.id)
 
+        context['awaiting_approval'] = Appointments.objects.all().filter(approved=False, host_id=user_profile.id)
+        context['approved'] = Appointments.objects.all().filter(approved=True, host_id=user_profile.id)
         context['profile'] = user_profile
-        return render(request, self.template_name, context)
-
-
-@login_required
-def add_visitor(request):
-    return render(request, 'visitors/form.html', {})
-
-
-def login(req, template_name=''):
-    return django_login(req, **{"template_name": 'login.html'})
-
-
-def logout(req, template_name=''):
-    django_logout(req, **{"template_name": 'login.html'})
-    return redirect('/')
+        context['context'] = context
+        return render(request, template_name, context)

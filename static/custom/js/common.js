@@ -11,7 +11,7 @@ function setActiveMenu(){
     'visitors',
     'reports',
     'documents',
-    'staff-list',
+    'staff',
     'system-settings'
   ];
   var found = [];
