@@ -15,6 +15,13 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
+        'NAME': 'viLogged',
+        'ENGINE': 'sqlserver_ado',
+        'HOST': 'musa\\SQLEXPRESS',
+        'USER': '',
+        'PASSWORD': '',
+    },
+    't': {
         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
         'ENGINE': 'django.db.backends.sqlite3',
         'HOST': 'localhost',
@@ -113,13 +120,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'south',
     'django_filters',
     'django_extensions',
     'core',
     'appointments',
-
-    # Uncomment the next line to enable the admin:
+    'staff',
     'grappelli',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
