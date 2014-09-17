@@ -12,6 +12,7 @@ src
 man
 build
 venv
+env
 *~
 *_log.txt
 *.sqlite
