@@ -1,37 +1,12 @@
 import json
 import datetime
 from django.contrib import messages
-import simplejson
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, ListView, FormView
 from braces.views import LoginRequiredMixin
 from core.forms.core_forms import *
 from core.models import UserProfile
-
-
-def json_response(func):
-    """
-    A decorator that takes a view response and turns it
-    into json. If a callback is added through GET or POST
-    the response is JSONP.
-    """
-
-    def decorator(request, *args, **kwargs):
-        objects = func(request, *args, **kwargs)
-        if isinstance(objects, HttpResponse):
-            return objects
-        try:
-            data = simplejson.dumps(objects)
-            if 'callback' in request.REQUEST:
-                # a jsonp response!
-                data = '%s(%s);' % (request.REQUEST['callback'], data)
-                return HttpResponse(data, "text/javascript")
-        except:
-            data = simplejson.dumps(str(objects))
-        return HttpResponse(data, "application/json")
-
-    return decorator
 
 
 class JSONResponseMixin(object):
@@ -118,7 +93,7 @@ def user_profile_view(request, *args, **kwargs):
             html += '  <td>{0} {1}</td>'.format(approved.arrival_date, approved.visit_start_time)
             html += '  <td>{0} {1}</td>'.format(approved.departure_date, approved.visit_end_time)
             html += '</tr>'
-        data = simplejson.dumps({"html": html})
+        data = json.dumps({"html": html})
 
         return HttpResponse(data, content_type='application/json')
 
