@@ -9,7 +9,4 @@ django-grappelli
 django-uuidfield==0.5.0
 djangorestframework
 six
-django-mssql
-pyusb
-pywin32==219
-pywinusb
+django-sendsms
