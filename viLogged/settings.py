@@ -1,6 +1,9 @@
 # Django settings for viLogged project.
 import os
 import sys
+import platform
+SYS_OS = platform.system()
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PARENT = os.path.dirname(PROJECT_ROOT)
 sys.path.insert(0, PROJECT_ROOT)
@@ -12,24 +15,26 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'NAME': 'viLogged',
-        'ENGINE': 'sqlserver_ado',
-        'HOST': 'musa\\SQLEXPRESS',
-        'USER': '',
-        'PASSWORD': '',
-    },
-    't': {
-        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
-        'ENGINE': 'django.db.backends.sqlite3',
-        'HOST': 'localhost',
-        'USER': '',
-        'PASSWORD': '',
+if SYS_OS is 'Windows':
+    DATABASES = {
+        'default': {
+            'NAME': 'viLogged',
+            'ENGINE': 'sqlserver_ado',
+            'HOST': 'musa\\SQLEXPRESS',
+            'USER': '',
+            'PASSWORD': '',
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
+            'ENGINE': 'django.db.backends.sqlite3',
+            'HOST': 'localhost',
+            'USER': '',
+            'PASSWORD': '',
+        }
+    }
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
