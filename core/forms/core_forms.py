@@ -1,9 +1,10 @@
 from django import forms
 from core.models import *
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 import uuid
-
+User = get_user_model()
 
 class UserProfileFrom(forms.ModelForm):
     class Meta:
@@ -24,7 +25,7 @@ class UserCreateForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2", 'last_name', 'first_name', 'is_superuser')
+        fields = ("username", "email", 'last_name', 'first_name')
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)

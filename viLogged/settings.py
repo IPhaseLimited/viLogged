@@ -132,12 +132,26 @@ INSTALLED_APPS = (
     'staff',
     'grappelli',
     'django.contrib.admin',
+    'django_twilio',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
+TWILIO_ACCOUNT_SID = 'AC9bea919627d63c232851c8e56faf6435'
+TWILIO_AUTH_TOKEN = '0f37345fc2c507b4f4ae31c82fdee6ab'
+TWILIO_DEFAULT_CALLERID = 'viLogged VMS'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'iphaselimited@gmail.com'
+EMAIL_HOST_PASSWORD = '*ip4life#'
+DEFAULT_FROM_EMAIL = 'iphaselimited@gmail.com'
+
+
 FIXTURE_DIRS = (
-   os.path.join(PROJECT_ROOT, "core/fixtures"),
+    os.path.join(PROJECT_ROOT, "core/fixtures"),
 )
 
 FILE_UPLOAD_PERMISSIONS = 0644
@@ -187,3 +201,5 @@ LOGGING = {
         },
     }
 }
+
+from lib.custom_settings import *

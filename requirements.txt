@@ -10,3 +10,4 @@ django-uuidfield==0.5.0
 djangorestframework
 six
 django-sendsms
+django_twilio

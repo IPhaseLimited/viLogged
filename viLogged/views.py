@@ -9,6 +9,9 @@ from braces.views import LoginRequiredMixin
 from core.models import Visitors, VisitorsLocation, Vehicle, Appointments
 from core.forms.core_forms import *
 from core.models import UserProfile
+from django.views.decorators.csrf import csrf_exempt
+from lib.utility import Utility
+from viLogged.settings import MEDIA_ROOT
 
 
 class JSONResponseMixin(object):
@@ -53,56 +56,6 @@ class VisitorsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         query = self.model.objects.all().select_related()
         return query
-
-
-class StaffsListView(LoginRequiredMixin, ListView):
-    template_name = 'staff/index.html'
-    model = UserProfile
-
-    def get_queryset(self):
-        query = self.model.objects.all().select_related()
-        return query
-
-
-class StaffFormView(LoginRequiredMixin, FormView):
-    template_name = 'staff/form.html'
-
-    def get(self, request, *args, **kwargs):
-        context = super(StaffFormView, self).get_context_data(**kwargs)
-        context['form'] = UserCreateForm()
-        context['profile_form'] = UserProfileFrom()
-        context['departments'] = CompanyDepartments.objects.all()
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(StaffFormView, self).get_context_data(**kwargs)
-        context['departments'] = CompanyDepartments.objects.all()
-        profile_form = UserProfileFrom(request.POST)
-        form = UserCreateForm(request.POST)
-        if form.is_valid() and profile_form.is_valid():
-            new_user = form.save()
-            new_user.email = request.POST.get('username')
-            new_user.save()
-            try:
-                department_id = CompanyDepartments.objects.get(uuid=request.POST.get('department'))
-            except CompanyDepartments.DoesNotExist:
-                department_id = None
-
-            user_profile = UserProfile(
-                user_id=new_user,
-                phone=request.POST.get('phone'),
-                home_phone=request.POST.get('home_phone'),
-                work_phone=request.POST.get('office_phone'),
-                department=department_id,
-                designation=request.POST.get('designation')
-            )
-            user_profile.save()
-
-            return HttpResponseRedirect("/staff-list/")
-        else:
-            context['form'] = form
-            context['profile_form'] = profile_form
-            return render(request, self.template_name, context)
 
 
 class VisitorsFormView(LoginRequiredMixin, FormView):
@@ -166,3 +119,30 @@ def login(req, template_name=''):
 def logout(req, template_name=''):
     django_logout(req, **{"template_name": 'login.html'})
     return redirect('/')
+
+
+
+@csrf_exempt
+def send_email(request):
+    sent = Utility.send_email('Test Mail', 'test is cool', ['musa@musamusa.com'])
+    return HttpResponse('mail sent is {}'.format(sent))
+
+
+def sms(request):
+    sent = Utility.sms()
+    return HttpResponse('sms sent is {}'.format(sent))
+
+
+def load_bar_code(request):
+    filename = MEDIA_ROOT+'/img/ean13.png'
+    str_name = Utility.create_barcode('123344555')
+    context = {}
+    context['image_code'] = str_name
+    return render(request, 'test_image.html', context)
+
+
+def label(request):
+    filename = MEDIA_ROOT+'/img/ean13.png'
+    str_name = Utility.create_barcode('0000001')
+    context = {'image_code': str_name}
+    return render(request, 'lable.html', context)

@@ -1,12 +1,13 @@
 import json
 import datetime
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect, HttpResponse, QueryDict
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, FormView
 from braces.views import LoginRequiredMixin
 from core.forms.core_forms import *
 from core.models import UserProfile
+from django.contrib.auth.models import User
 
 
 class JSONResponseMixin(object):
@@ -40,17 +41,60 @@ class StaffFormView(LoginRequiredMixin, FormView):
     template_name = 'staff/form.html'
 
     def get(self, request, *args, **kwargs):
+        url_name = self.request.resolver_match.url_name
+        if url_name is 'staff_edit_pk':
+
+            user_data = User.objects.get(id=self.kwargs['pk'])
+            try:
+                user_profile = UserProfile.objects.get(user_id__id=user_data.id)
+            except UserProfile.DoesNotExist:
+                user_profile = {}
+
+        elif url_name is 'staff_edit':
+            user_data = User.objects.get(id=request.user.id)
+            try:
+                user_profile = UserProfile.objects.get(user_id__id=request.user.id)
+            except UserProfile.DoesNotExist:
+                user_profile = {}
+
+        else:
+            user_data = {}
+            user_profile = {}
+
         context = super(StaffFormView, self).get_context_data(**kwargs)
-        context['form'] = UserCreateForm()
-        context['profile_form'] = UserProfileFrom()
+        context['form'] = UserCreateForm(instance=user_data)
+        context['profile_form'] = UserProfileFrom(instance=user_profile)
         context['departments'] = CompanyDepartments.objects.all()
+        context['user_id'] = request.user.id
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+
+        url_name = self.request.resolver_match.url_name
+        if url_name is 'staff_edit_pk':
+
+            user_data = User.objects.get(id=self.kwargs['pk'])
+            try:
+                user_profile = UserProfile.objects.get(user_id__id=user_data.id)
+            except UserProfile.DoesNotExist:
+                user_profile = {}
+
+        elif url_name is 'staff_edit':
+            user_data = User.objects.get(id=request.user.id)
+            try:
+                user_profile = UserProfile.objects.get(user_id__id=request.user.id)
+            except UserProfile.DoesNotExist:
+                user_profile = {}
+
+        else:
+            user_data = {}
+            user_profile = {}
+
         context = super(StaffFormView, self).get_context_data(**kwargs)
         context['departments'] = CompanyDepartments.objects.all()
-        profile_form = UserProfileFrom(request.POST)
-        form = UserCreateForm(request.POST)
+        context['post_data'] = request.POST
+        profile_form = UserProfileFrom(request.POST, instance=user_profile)
+        form = UserCreateForm(request.POST, instance=user_data)
         if form.is_valid() and profile_form.is_valid():
             new_user = form.save()
             new_user.email = request.POST.get('username')
@@ -101,7 +145,7 @@ def user_profile_view(request, *args, **kwargs):
         try:
             user_profile = UserProfile.objects.get(id=kwargs['pk'])
         except KeyError:
-            user_profile = UserProfile.objects.get(user_id=request.user.id)
+            user_profile = User.objects.filter(userprofile__user_id=request.user.id).get(id=request.user.id)
 
         context['awaiting_approval'] = Appointments.objects.all().filter(approved=False, host_id=user_profile.id)
         context['approved'] = Appointments.objects.all().filter(approved=True, host_id=user_profile.id)
