@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block main-content %}
- Args {{ args }}
+ Args {{ user_data }}
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <div class="widget">
@@ -22,78 +22,7 @@
         <div class="widget-content">
           <div style="padding: 40px;" class="padd">
 
-            <form class="form-horizontal" action="" method="post">
-              <div class="form-group">
-                <label for="first_name">First Name</label>
-                <input id="first_name" type="text" name="first_name" class="form-control" value="{% ifnotequal form.first_name.value None %}{{ form.first_name.value }}{% endifnotequal %}">
-                {% if form.errors.first_name %}<span class="text-danger bold">{{ form.first_name.errors|striptags  }} </span>{% endif %}
-              </div>
-              <div class="form-group">
-                <label for="last_name">Last Name</label>
-                <input id="last_name" type="text" name="last_name" class="form-control" value="{% ifnotequal form.last_name.value None %}{{ form.last_name.value }}{% endifnotequal %}">
-                {% if form.errors.last_name %}<span class="text-danger bold">{{ form.last_name.errors|striptags  }} </span>{% endif %}
-              </div>
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input id="email" type="text" name="username" class="form-control" value="{% ifnotequal form.username.value None %}{{ form.username.value }}{% endifnotequal %}">
-                {% if form.errors.username %}<span class="text-danger bold">{{ form.username.errors|striptags  }} </span>{% endif %}
-              </div>
-              <div class="form-group">
-                <label for="id_password1">Password</label>
-                <input type="password" name="password1" id="id_password1" class="form-control" value="{% ifnotequal form.password1.value None %}{{ form.password1.value }}{% endifnotequal %}">
-                {% if form.errors.password1 %}<span class="text-danger bold">{{ form.password1.errors|striptags  }} </span>{% endif %}
-              </div>
-              <div class="form-group">
-                <label for="id_password2">Password confirmation</label>
-                <input class="form-control" type="password" name="password2" id="id_password2" value="{% ifnotequal form.password2.value None %}{{ form.password2.value }}{% endifnotequal %}">
-                {% if form.errors.password2 %}<span class="text-danger bold">{{ form.password2.errors|striptags  }} </span>{% endif %}
-                <span class="helptext">Enter the same password as above, for verification.</span>
-              </div>
-              <div class="form-group">
-                <label for="phone">Mobile</label>
-                <input id="phone" type="number" name="phone" class="form-control" value="{{ profile_form.phone.value }}">
-                {% if profile_form.errors.phone %}<span class="text-danger bold">{{ profile_form.phone.errors|striptags  }} </span>{% endif %}
-              </div>
-              <div class="form-group">
-                <label for="home_phone">Home Phone </label>
-                <input id="home_phone" type="number" name="home_phone" class="form-control" value="{{ form.home_phone.value }}">
-                {% if profile_form.errors.home_phone %}<span class="text-danger bold">{{ profile_form.home_phone.errors|striptags  }} </span>{% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="work_phone">Work Phone </label>
-                <!--input id="work_phone" type="number" name="work_phone" class="form-control"-->
-                {{ profile_form.work_phone }}
-                {% if profile_form.errors.work_phone %}<span class="text-danger bold">{{ profile_form.work_phone.errors|striptags  }} </span>{% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="departments"></label>
-                <select id="departments" name="departments" class="form-control">
-                  <option value="">Select Department </option>
-                  {% for department in departments %}
-                  <option {% ifequal profile_form.departments.value department.uuid %} selected="selected" {% endifequal %}
-                    value="{{ department.uuid }}">{{ department.department_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="designation">Designation </label>
-                <input id="designation" type="text" name="designation" class="form-control">
-                {% if profile_form.errors.designation %}<span class="text-danger bold">{{ profile_form.designation.errors|striptags  }} </span>{% endif %}
-              </div>
-
-              <div class="form-group">
-                <div class="pull-right">
-                  <input class="btn btn-primary" type="submit" value="Create the account">
-                </div>
-                <div class="clearfix"></div>
-              </div>
-
-              {% csrf_token %}
-            <input name="id" type="hidden" value="{{ form.pk.value }}">
-            </form>
+           {% include 'staff/raw-form.html' %}
           </div>
           <div class="widget-foot">
             <!-- Footer goes here -->

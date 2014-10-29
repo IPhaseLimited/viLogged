@@ -37,7 +37,7 @@ else:
     }
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
     'django_extensions',
     'core',
     'appointments',
@@ -163,6 +164,11 @@ REST_FRAMEWORK = {
 # Only used if the `serializer_class` attribute is not set on a view.
 'DEFAULT_MODEL_SERIALIZER_CLASS':
 'rest_framework.serializers.HyperlinkedModelSerializer',
+'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework.authentication.TokenAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+),
 # # Use Django's standard `django.contrib.auth` permissions,
 # # or allow read-only access for unauthenticated users.
 # 'DEFAULT_PERMISSION_CLASSES': [
@@ -173,6 +179,7 @@ REST_FRAMEWORK = {
 # http://www.django-rest-framework.org/api-guide/filtering
 'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
 }
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -201,5 +208,3 @@ LOGGING = {
         },
     }
 }
-
-from lib.custom_settings import *

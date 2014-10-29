@@ -4,6 +4,7 @@ from core.models import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 import uuid
+import json
 User = get_user_model()
 
 class UserProfileFrom(forms.ModelForm):
@@ -22,17 +23,65 @@ class UserProfileFrom(forms.ModelForm):
 
 
 class UserCreateForm(UserCreationForm):
+    password1 = forms.CharField(required=False)
+    password2 = forms.CharField(required=False)
 
     class Meta:
         model = User
-        fields = ("username", "email", 'last_name', 'first_name')
+        fields = ("username", "email", 'last_name', 'first_name', 'id')
+        exclude = ('password1', 'password2', 'password')
+
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreateForm, self).__init__(*args, **kwargs)
+        try:
+            self.fields['email'].initial = self.instance.email
+        except User.DoesNotExist:
+            pass
+
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        return username
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        if self.instance.id is None:
+            if password1 == '':
+                self._errors['password1'] = u'This field is required.'
+        return password1
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if self.instance.id is None:
+            if password2 == '':
+                self._errors['password2'] = u'This field is required.'
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
 
     def save(self, commit=True):
+        password = self.instance.password
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
+        if self.cleaned_data["password1"] == '':
+            user.password = password
+            user.save()
         return user
+
+    def clean(self):
+
+        cleaned_data = super(UserCreateForm, self).clean()
+        return self.cleaned_data
 
 
 class VisitorsForm(forms.ModelForm):

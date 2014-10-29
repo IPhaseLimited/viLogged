@@ -5,9 +5,18 @@ import urllib2
 import base64
 import barcode
 from barcode.writer import ImageWriter
+import json
 
 
 class Utility():
+
+    @staticmethod
+    def error_to_json(error):
+        error_dict = {}
+        for k in error:
+            error_dict[k] = error[k]
+
+        return json.dumps(error_dict)
 
     @staticmethod
     def send_email(mail_title, message, recipients):

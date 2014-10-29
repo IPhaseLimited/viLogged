@@ -1,7 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 from mixin_tools.history import HistoryFieldsMixin
+from rest_framework.authtoken.models import Token
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+
+@receiver(post_save, sender=User)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    ''' Creates a token whenever a User is created '''
+    if created:
+        Token.objects.create(user=instance)
 
 # Create your models here.
 class CompanyDepartments(HistoryFieldsMixin):
@@ -16,7 +25,7 @@ class CompanyDepartments(HistoryFieldsMixin):
 
 
 class UserProfile(models.Model):
-    user_id = models.OneToOneField(User, unique=True, blank=True, null=True)
+    user_id = models.OneToOneField(User, unique=True, blank=True, null=True, related_name='user_profile')
     phone = models.CharField(max_length=20, unique=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)

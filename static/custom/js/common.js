@@ -38,3 +38,11 @@ function uuidGenerator() {
 }
 
 setActiveMenu();
+
+$('.show-modal').click(function(e) {
+  var modalLink = $(this).attr('modal-url');
+  $('.modal-body').load(modalLink, function() {
+    $('#vi-modal-content').modal('show');
+  });
+
+});

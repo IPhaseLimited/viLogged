@@ -9,7 +9,25 @@ from core.models import UserProfile, Vehicle, Visitors, VisitorsLocation, Visito
 from django.contrib import admin
 admin.autodiscover()
 
-from rest_framework import viewsets, routers
+from rest_framework import viewsets, routers, serializers, generics
+
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'snippets')
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # ViewSets define the view behavior.
@@ -86,5 +104,10 @@ urlpatterns = patterns('',
     url(r'^sms/$', 'viLogged.views.sms'),
     url(r'^load-image/$', 'viLogged.views.load_bar_code'),
     url(r'^label/$', 'viLogged.views.label'),
+    url(r'^api/', include('api.url')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += patterns('',
+    url(r'^api-token-auth/', 'rest_framework.authtoken.views.obtain_auth_token')
+)

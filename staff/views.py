@@ -8,6 +8,7 @@ from braces.views import LoginRequiredMixin
 from core.forms.core_forms import *
 from core.models import UserProfile
 from django.contrib.auth.models import User
+from lib.utility import Utility
 
 
 class JSONResponseMixin(object):
@@ -37,12 +38,13 @@ class StaffsListView(LoginRequiredMixin, ListView):
         return query
 
 
-class StaffFormView(LoginRequiredMixin, FormView):
+class StaffFormView(FormView):
     template_name = 'staff/form.html'
+    raw_template_name = 'staff/raw-form.html'
 
     def get(self, request, *args, **kwargs):
         url_name = self.request.resolver_match.url_name
-        if url_name is 'staff_edit_pk':
+        if url_name is 'staff_edit_pk' or url_name is 'staff_modal_edit_pk':
 
             user_data = User.objects.get(id=self.kwargs['pk'])
             try:
@@ -50,7 +52,7 @@ class StaffFormView(LoginRequiredMixin, FormView):
             except UserProfile.DoesNotExist:
                 user_profile = {}
 
-        elif url_name is 'staff_edit':
+        elif url_name is 'staff_edit' or url_name is 'staff_modal_edit':
             user_data = User.objects.get(id=request.user.id)
             try:
                 user_profile = UserProfile.objects.get(user_id__id=request.user.id)
@@ -58,14 +60,17 @@ class StaffFormView(LoginRequiredMixin, FormView):
                 user_profile = {}
 
         else:
-            user_data = {}
-            user_profile = {}
+            user_data = None
+            user_profile = None
 
         context = super(StaffFormView, self).get_context_data(**kwargs)
         context['form'] = UserCreateForm(instance=user_data)
         context['profile_form'] = UserProfileFrom(instance=user_profile)
         context['departments'] = CompanyDepartments.objects.all()
-        context['user_id'] = request.user.id
+        context['user_data'] = user_data
+        if url_name is 'staff_modal_edit_pk' or url_name is 'staff_modal_edit' or url_name is 'staff_modal_form':
+            return render(request, self.raw_template_name, context)
+
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -87,16 +92,18 @@ class StaffFormView(LoginRequiredMixin, FormView):
                 user_profile = {}
 
         else:
-            user_data = {}
-            user_profile = {}
+            user_data = None
+            user_profile = None
 
         context = super(StaffFormView, self).get_context_data(**kwargs)
         context['departments'] = CompanyDepartments.objects.all()
-        context['post_data'] = request.POST
+
         profile_form = UserProfileFrom(request.POST, instance=user_profile)
         form = UserCreateForm(request.POST, instance=user_data)
+        context['user_data'] = Utility.error_to_json(form.errors)
         if form.is_valid() and profile_form.is_valid():
-            new_user = form.save()
+            new_user = form.save(commit=False)
+            new_user.user = user_data
             new_user.email = request.POST.get('username')
             new_user.save()
             try:
@@ -105,6 +112,7 @@ class StaffFormView(LoginRequiredMixin, FormView):
                 department_id = None
 
             user_profile = UserProfile(
+                id=user_profile.id,
                 user_id=new_user,
                 phone=request.POST.get('phone'),
                 home_phone=request.POST.get('home_phone'),
@@ -114,7 +122,7 @@ class StaffFormView(LoginRequiredMixin, FormView):
             )
             user_profile.save()
 
-            return HttpResponseRedirect("/staff-list/")
+            return HttpResponseRedirect("/staff/")
         else:
             context['form'] = form
             context['profile_form'] = profile_form
