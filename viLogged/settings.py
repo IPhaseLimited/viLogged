@@ -101,6 +101,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -134,6 +135,7 @@ INSTALLED_APPS = (
     'grappelli',
     'django.contrib.admin',
     'django_twilio',
+    'corsheaders',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -208,3 +210,9 @@ LOGGING = {
         },
     }
 }
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:9000',
+    'localhost:8000',
+    'localhost/',
+)

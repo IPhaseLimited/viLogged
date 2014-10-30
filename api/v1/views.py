@@ -1,4 +1,5 @@
 from rest_framework import serializers, generics, mixins, permissions
+from rest_framework.response import Response
 from django.contrib.auth.models import User
 from staff.views import UserProfile
 from django.contrib.auth.models import User
@@ -81,3 +82,32 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class GetUserByToken(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def retrieve(self, request, pk=None):
+        """
+        If provided 'pk' is "me" then return the current user.
+        """
+        if request.user and pk is None:
+            return Response(UserSerializer(request.user).data)
+        return super(GetUserByToken, self).retrieve(request, pk)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class UserView(generics.RetrieveAPIView):
+    model = User
+    serializer_class = UserSerializer
+
+    def retrieve(self, request, pk=None):
+        """
+        If provided 'pk' is "me" then return the current user.
+        """
+        if request.user and pk == None:
+            return Response(UserSerializer(request.user).data)
+        return super(UserView, self).retrieve(request, pk)

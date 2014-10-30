@@ -11,3 +11,4 @@ djangorestframework
 six
 django-sendsms
 django_twilio
+git+git://github.com/ottoyiu/django-cors-headers.git
