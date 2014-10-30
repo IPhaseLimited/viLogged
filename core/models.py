@@ -12,6 +12,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+
 # Create your models here.
 class CompanyDepartments(HistoryFieldsMixin):
     department_name = models.CharField(max_length=100)
@@ -29,9 +30,10 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=20, unique=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)
-    department = models.ForeignKey(CompanyDepartments, to_field='uuid', blank=True, null=True)
+    department = models.ForeignKey(CompanyDepartments, to_field='uuid', blank=True, null=True,
+                                   related_name='company_name')
     designation = models.CharField(max_length=50, blank=True, null=True)
-    image_url = models.ImageField(upload_to='images', blank=True, null=True)
+    image_url = models.TextField(blank=True, null=True)
 
     class Meta:
         app_label = 'core'
@@ -72,12 +74,12 @@ class Visitors(HistoryFieldsMixin):
     date_of_birth = models.DateField(blank=True, null=True)
     nationality = models.CharField(max_length=20, blank=True, null=True)
     state_of_origin = models.CharField(max_length=50, blank=True, null=True)
-    lga = models.CharField(max_length=50, blank=True, null=True)
-    image_url = models.ImageField(upload_to='images', blank=True, null=True)
-    fingerprint = models.ImageField(upload_to='finger_prints', max_length=100, blank=True, null=True)
-    scanned_signature = models.ImageField(upload_to='signature', max_length=100, blank=True, null=True)
+    lga_of_origin = models.CharField(max_length=50, blank=True, null=True)
+    image_url = models.TextField(blank=True, null=True)
+    fingerprint = models.TextField(max_length=100, blank=True, null=True)
+    scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
-    group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True)
+    group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True, related_name="group")
 
     class Meta:
         app_label = 'core'
@@ -87,37 +89,36 @@ class Visitors(HistoryFieldsMixin):
 
 
 class VisitorsLocation(HistoryFieldsMixin):
-    visitor_id = models.ForeignKey(Visitors, to_field="uuid", blank=True, null=True)
-    state = models.IntegerField(max_length=5)
-    lga = models.IntegerField(max_length=5)
+    visitor_id = models.ForeignKey(Visitors, to_field="uuid", blank=True, null=True, related_name='current_location')
+    state = models.CharField(max_length=5)
+    residential_lga = models.CharField(max_length=5)
     contact_address = models.CharField(max_length=100)
 
 
 class Appointments(HistoryFieldsMixin):
-    visitor_id = models.ForeignKey(Visitors, to_field="uuid")
+    visitor_id = models.ForeignKey(Visitors, to_field="uuid", related_name="visitor")
     representing = models.CharField(max_length=100, blank=True, null=True)
     purpose = models.CharField(max_length=50, blank=True, null=True)
-    arrival_date = models.DateField()
-    departure_date = models.DateField()
+    appointment_date = models.DateField()
     visit_start_time = models.TimeField()
     visit_end_time = models.TimeField()
-    host_id = models.ForeignKey(UserProfile, blank=True, null=True)
+    host_id = models.ForeignKey(UserProfile, blank=True, null=True, related_name="user_profile")
     escort_required = models.BooleanField(default=False)
     approved = models.BooleanField(default=False)
     expired = models.BooleanField(default=False)
     checked_in = models.DateTimeField(default=None, blank=True, null=True)
     checked_out = models.DateTimeField(blank=True, null=True)
     label_code = models.CharField(max_length=50)
-    entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid")
+    entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid",
+                                    related_name="entrance")
 
 
 class Vehicle(HistoryFieldsMixin):
-    visitor_id = models.ForeignKey(Visitors, blank=True, null=True, to_field="uuid")
+    appointments_id = models.ForeignKey(Appointments, blank=True, null=True, to_field="uuid", related_name='vehicle')
     license = models.CharField(max_length=50, blank=True)
     model = models.CharField(max_length=50, blank=True, null=True)
     vehicle_type = models.CharField(max_length=50, blank=True, null=True)
-    tank_size = models.IntegerField(blank=True, null=True)
-    fuel_type = models.CharField(max_length=20, blank=True, null=True)
+    color = models.CharField(blank=True, null=True, max_length=20)
 
 
 class MessageQueue(HistoryFieldsMixin):
@@ -133,10 +134,8 @@ class AppLicenseDuration(models.Model):
     app_duration_days = models.IntegerField()
 
 
-class DocumentManagement(HistoryFieldsMixin):
-    document_type = models.CharField(max_length=100)
-    document_name = models.CharField(max_length=50)
-    document_code = models.CharField(max_length=50)
-    linked_user = models.ForeignKey(Visitors, to_field='uuid', blank=True, null=True)
-    checked_in = models.DateTimeField(blank=True, null=True, default=None)
-    checked_out = models.DateTimeField(blank=True, null=True, default=None)
+class RestrictedItems(HistoryFieldsMixin):
+    item_type = models.CharField(max_length=100)
+    item_name = models.CharField(max_length=50)
+    item_code = models.CharField(max_length=50)
+    appointment_id = models.ForeignKey(Appointments, blank=True, null=True, related_name="restricted_items")

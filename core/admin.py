@@ -16,7 +16,7 @@ class UserAdmin(admin.ModelAdmin):
 class VisitorsAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'changed_by')
     list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_id',
-                    'state_of_origin', 'lga', 'image_url', 'occupation', 'company_name', 'company_address',
+                    'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
                     'fingerprint', 'scanned_signature', 'visitors_pass_code',)
 
     #prepopulated_fields = {'uuid': (uuid.uuid4(),)}
@@ -39,7 +39,7 @@ class VisitorGroupAdmin(admin.ModelAdmin):
 
 
 class VisitorsLocationAdmin(admin.ModelAdmin):
-    list_display = ('visitor_id', 'state', 'lga', 'contact_address')
+    list_display = ('visitor_id', 'state', 'residential_lga', 'contact_address')
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
@@ -50,7 +50,7 @@ class VisitorsLocationAdmin(admin.ModelAdmin):
 
 
 class AppointmentsAdmin(admin.ModelAdmin):
-    list_display = ('visitor_id', 'representing', 'purpose', 'arrival_date', 'departure_date', 'visit_start_time',
+    list_display = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time',
                     'visit_end_time', 'host_id', 'escort_required', 'approved', 'expired', 'checked_in', 'checked_out',
                     'entrance_id')
     readonly_fields = ('uuid', 'changed_by')
@@ -63,7 +63,7 @@ class AppointmentsAdmin(admin.ModelAdmin):
 
 
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ('visitor_id', 'license', 'model', 'vehicle_type', 'tank_size', 'fuel_type')
+    list_display = ('appointments_id', 'license', 'model', 'vehicle_type', 'color',)
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
@@ -84,8 +84,8 @@ class MessageQueueAdmin(admin.ModelAdmin):
         obj.save()
 
 
-class DocumentManagementAdmin(admin.ModelAdmin):
-    list_display = ('document_type', 'document_name', 'document_code', 'linked_user', 'checked_in', 'checked_out')
+class RestrictedItemsManagementAdmin(admin.ModelAdmin):
+    list_display = ('item_type', 'item_name', 'item_code', 'appointment_id',)
     readonly_fields = ('uuid', 'changed_by')
 
     def save_model(self, request, obj, form, change):
@@ -93,6 +93,7 @@ class DocumentManagementAdmin(admin.ModelAdmin):
             obj.uuid = uuid.uuid4()
             obj.changed_by = request.user
         obj.save()
+
 
 class CompanyEntranceNamesAdmin(admin.ModelAdmin):
     list_display = ('entrance_name',)
@@ -124,6 +125,6 @@ admin.site.register(VisitorsLocation, VisitorsLocationAdmin)
 admin.site.register(Vehicle, VehicleAdmin)
 admin.site.register(Appointments, AppointmentsAdmin)
 admin.site.register(MessageQueue, MessageQueueAdmin)
-admin.site.register(DocumentManagement, DocumentManagementAdmin)
+admin.site.register(RestrictedItems, RestrictedItemsManagementAdmin)
 admin.site.register(CompanyEntranceNames, CompanyEntranceNamesAdmin)
 admin.site.register(CompanyDepartments, CompanyDepartmentsAdmin)
