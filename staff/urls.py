@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from staff.views import *
 from django.contrib.auth.models import User
 from core.models import UserProfile, Vehicle, Visitors, VisitorsLocation, VisitorGroup, Appointments, MessageQueue,\
-    AppLicenseDuration, DocumentManagement
+    AppLicenseDuration
 
 from django.contrib import admin
 

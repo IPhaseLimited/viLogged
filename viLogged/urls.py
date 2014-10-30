@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from viLogged.views import *
 from django.contrib.auth.models import User
 from core.models import UserProfile, Vehicle, Visitors, VisitorsLocation, VisitorGroup, Appointments, MessageQueue,\
-    AppLicenseDuration, DocumentManagement
+    AppLicenseDuration
 
 from django.contrib import admin
 admin.autodiscover()
@@ -68,8 +68,6 @@ class AppLicenseDurationViewSet(viewsets.ModelViewSet):
     model = AppLicenseDuration
 
 
-class DocumentManagementViewSet(viewsets.ModelViewSet):
-    model = DocumentManagement
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -81,7 +79,6 @@ router.register(r'visitor-group', VisitorGroupViewSet)
 router.register(r'appointments', AppointmentsViewSet)
 router.register(r'messages', MessageQueueViewSet)
 router.register(r'app-license-duration', AppLicenseDurationViewSet)
-router.register(r'document-management', DocumentManagementViewSet)
 
 urlpatterns = patterns('',
     #url(r'^$', HomePageView.as_view()),
