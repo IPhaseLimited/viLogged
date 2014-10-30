@@ -99,15 +99,3 @@ class GetUserByToken(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-
-class UserView(generics.RetrieveAPIView):
-    model = User
-    serializer_class = UserSerializer
-
-    def retrieve(self, request, pk=None):
-        """
-        If provided 'pk' is "me" then return the current user.
-        """
-        if request.user and pk == None:
-            return Response(UserSerializer(request.user).data)
-        return super(UserView, self).retrieve(request, pk)
