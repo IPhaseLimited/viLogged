@@ -31,18 +31,14 @@ class JSONResponseMixin(object):
         # -- can be serialized as JSON.
         return json.dumps(context)
 
-@login_required
+
 def home(request, *args, **kwargs):
     approved = Appointments.objects.all().filter(approved=True).select_related()
     in_progress = Appointments.objects.all().select_related()
     black_listed = Visitors.objects.all().filter(group_id__black_listed=True).select_related()
 
-    context = {
-        'approved': approved,
-        'in_progress': in_progress,
-        'black_listed': black_listed
-    }
-    return render(request, 'index.html', context)
+    data = json.dumps({"message":"nothing to see here"})
+    return HttpResponse(data, content_type='application/json')
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):

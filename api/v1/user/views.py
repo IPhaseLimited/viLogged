@@ -1,18 +1,8 @@
-from rest_framework import serializers, generics, mixins, permissions
+from rest_framework import serializers, generics, mixins
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from staff.views import UserProfile
-from django.contrib.auth.models import User
-
-
-class IsStaffOrTargetUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        # allow user to list all users if logged in user is staff
-        return view.action == 'retrieve' or request.user.is_staff
-
-    def has_object_permission(self, request, view, obj):
-        # allow logged in user to view own details, allows staff to view all records
-        return request.user.is_staff or obj == request.user
+from core.models import UserProfile
+from api.permissions import *
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

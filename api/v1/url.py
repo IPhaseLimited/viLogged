@@ -1,9 +1,15 @@
 from django.conf.urls import patterns, include, url
-from api.v1.views import *
+from api.v1.user.views import UserList, GetUserByToken
+from api.v1.visitors.views import VisitorsList, VisitorsNestedList
 
 urlpatterns = patterns('',
-    url(r'^users$', UserList.as_view()),
-    url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view()),
-    url(r'^user/$', UserList.as_view()),
+    url(r'^users/$', UserList.as_view()),
     url(r'^current-user/$', GetUserByToken.as_view()),
+    url(r'^visitors/$', VisitorsList.as_view()),
+    url(r'^visitors/nested/$', VisitorsNestedList.as_view()),
+    url(r'^user/', include('api.v1.user.url')),
+    url(r'^visitor/', include('api.v1.visitors.url')),
+    url(r'^appointment/', include('api.v1.appointments.url')),
+    url(r'^report/', include('api.v1.reports.url')),
+
 )
