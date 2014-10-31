@@ -51,7 +51,7 @@ class VisitorsLocationAdmin(admin.ModelAdmin):
 
 class AppointmentsAdmin(admin.ModelAdmin):
     list_display = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time',
-                    'visit_end_time', 'host_id', 'escort_required', 'approved', 'expired', 'checked_in', 'checked_out',
+                    'visit_end_time', 'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out',
                     'entrance_id')
     readonly_fields = ('uuid', 'changed_by')
 

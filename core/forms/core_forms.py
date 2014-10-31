@@ -104,8 +104,8 @@ class AppointmentsForm(forms.ModelForm):
     class Meta:
         model = Appointments
         fields = ['visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time',
-                  'visit_end_time', 'host_id', 'escort_required', 'approved', 'expired', 'checked_in', 'checked_out',
-                  'entrance_id']
+                  'visit_end_time', 'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in',
+                  'checked_out', 'entrance_id']
 
     def save(self, commit=True):
         appointment = super(AppointmentsForm, self).save(commit=False)

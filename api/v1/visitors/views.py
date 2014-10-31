@@ -3,9 +3,11 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from core.models import Visitors, VisitorGroup, VisitorsLocation
 from api.permissions import *
+from api.serializer import *
 
 
 class VisitorsLocationSerializer(serializers.ModelSerializer):
+    visitor_id = UUIDRelatedField(many=False)
 
     class Meta:
         model = VisitorsLocation
@@ -14,6 +16,7 @@ class VisitorsLocationSerializer(serializers.ModelSerializer):
 
 
 class VisitorSerializer(serializers.ModelSerializer):
+    group_id = UUIDRelatedField()
 
     class Meta:
         model = Visitors
