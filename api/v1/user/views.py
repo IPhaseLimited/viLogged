@@ -8,7 +8,7 @@ from api.v1.core.serializers import CompanyDepartmentsSerializer
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    department = UUIDRelatedField()
+    #department = UUIDRelatedField()
 
     class Meta:
         model = UserProfile
