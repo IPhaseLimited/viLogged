@@ -116,6 +116,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_superuser',
                   'user_profile')
+        write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):
         # call set_password on user object. Without this
