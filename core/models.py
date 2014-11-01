@@ -124,8 +124,9 @@ class Vehicle(HistoryFieldsMixin):
 class MessageQueue(HistoryFieldsMixin):
     message_body = models.TextField()
     destination = models.CharField(max_length=50)
-    source = models.IntegerField(blank=True, null=True)
-    status = models.CharField(max_length=50, blank=True, null=True)
+    subject = models.IntegerField(blank=True, null=True)
+    status = models.IntegerField(default=0)
+    type = models.IntegerField(max_length=2, default=0)
 
 
 class AppLicenseDuration(models.Model):

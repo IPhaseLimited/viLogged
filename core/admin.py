@@ -73,17 +73,6 @@ class VehicleAdmin(admin.ModelAdmin):
         obj.save()
 
 
-class MessageQueueAdmin(admin.ModelAdmin):
-    list_display = ('message_body', 'destination', 'source', 'status')
-    readonly_fields = ('uuid', 'changed_by')
-
-    def save_model(self, request, obj, form, change):
-        if obj.uuid is None:
-            obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
-        obj.save()
-
-
 class RestrictedItemsManagementAdmin(admin.ModelAdmin):
     list_display = ('item_type', 'item_name', 'item_code', 'appointment_id',)
     readonly_fields = ('uuid', 'changed_by')
@@ -118,13 +107,11 @@ class CompanyDepartmentsAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-#admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Visitors, VisitorsAdmin)
 admin.site.register(VisitorGroup, VisitorGroupAdmin)
 admin.site.register(VisitorsLocation, VisitorsLocationAdmin)
 admin.site.register(Vehicle, VehicleAdmin)
 admin.site.register(Appointments, AppointmentsAdmin)
-admin.site.register(MessageQueue, MessageQueueAdmin)
 admin.site.register(RestrictedItems, RestrictedItemsManagementAdmin)
 admin.site.register(CompanyEntranceNames, CompanyEntranceNamesAdmin)
 admin.site.register(CompanyDepartments, CompanyDepartmentsAdmin)
