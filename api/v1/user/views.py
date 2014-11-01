@@ -110,23 +110,23 @@ class UserNestedSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     user_profile = UserProfileSerializer(many=False)
-    password = serializers.CharField(required=False)
+    #password = serializers.CharField(required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_superuser',
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_superuser',
                   'user_profile')
-        write_only_fields = ('password',)
+        #write_only_fields = ('password',)
 
-    def restore_object(self, attrs, instance=None):
-        # call set_password on user object. Without this
-        # the password will be stored in plain text.
-        user = super(UserDetailSerializer, self).restore_object(attrs, instance)
-        try:
-            user.set_password(attrs['password'])
-        except KeyError:
-            pass
-        return user
+    # def restore_object(self, attrs, instance=None):
+    #     # call set_password on user object. Without this
+    #     # the password will be stored in plain text.
+    #     user = super(UserDetailSerializer, self).restore_object(attrs, instance)
+    #     try:
+    #         user.set_password(attrs['password'])
+    #     except KeyError:
+    #         pass
+    #     return user
 
 
 class UserList(generics.ListAPIView, mixins.CreateModelMixin):
