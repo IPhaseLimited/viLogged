@@ -211,8 +211,4 @@ LOGGING = {
     }
 }
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:9000',
-    'localhost:8000',
-    'localhost/',
-)
+CORS_ORIGIN_ALLOW_ALL = True

@@ -33,10 +33,6 @@ class JSONResponseMixin(object):
 
 
 def home(request, *args, **kwargs):
-    approved = Appointments.objects.all().filter(approved=True).select_related()
-    in_progress = Appointments.objects.all().select_related()
-    black_listed = Visitors.objects.all().filter(group_id__black_listed=True).select_related()
-
     data = json.dumps({"message":"nothing to see here"})
     return HttpResponse(data, content_type='application/json')
 
