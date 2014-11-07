@@ -106,5 +106,5 @@ urlpatterns = patterns('',
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('',
-    url(r'^api-token-auth/', 'rest_framework.authtoken.views.obtain_auth_token')
+    url(r'^api-token-auth/', 'rest_framework.authtoken.views.obtain_auth_token'),
 )
