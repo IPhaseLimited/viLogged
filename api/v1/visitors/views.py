@@ -1,4 +1,4 @@
-from rest_framework import serializers, generics, mixins
+from rest_framework import serializers, generics, mixins, views
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from core.models import Visitors, VisitorGroup, VisitorsLocation
@@ -96,3 +96,25 @@ class VisitorDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class VisitorOwnDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                       generics.GenericAPIView, mixins.CreateModelMixin):
+    queryset = Visitors.objects.all()
+    serializer_class = VisitorSerializer
+    lookup_field = 'visitor_pass_code'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class AuthenticateVisitor(views.APIView):
+
+    def post(self, request):
+        return Response({'error_message': '', 'message': 'message was queued to be sent'})
