@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken',
+    'djoser',
     'django_extensions',
     'core',
     'appointments',
@@ -181,6 +182,15 @@ REST_FRAMEWORK = {
 # http://www.django-rest-framework.org/api-guide/filtering
 'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
 }
+
+DJOSER = {
+    'DOMAIN': 'vilogged',
+    'SITE_NAME': 'vilogged',
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+
+}
+
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
