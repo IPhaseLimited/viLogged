@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^profile/nested/(?P<pk>[0-9]+)/$', UserProfileNestedDetail.as_view()),
     url(r'^profile$', UserProfileList.as_view()),
     url(r'^profile/nested/$', UserProfileNestedList.as_view()),
+    url(r'^set/', include('djoser.urls')),
 )
