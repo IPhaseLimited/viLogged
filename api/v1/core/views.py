@@ -7,7 +7,6 @@ from api.v1.core.serializers import CompanyDepartmentsSerializer, VehicleSeriali
     RestrictedItemsSerializer
 
 
-
 class SendEmail(views.APIView):
 
     def post(self, request):
