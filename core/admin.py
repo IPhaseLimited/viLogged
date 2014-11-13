@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class VisitorsAdmin(admin.ModelAdmin):
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
     list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_id',
                     'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
                     'fingerprint', 'scanned_signature', 'visitors_pass_code',)
@@ -23,29 +23,29 @@ class VisitorsAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class VisitorGroupAdmin(admin.ModelAdmin):
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
     list_display = ('group_name', 'black_listed')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class VisitorsLocationAdmin(admin.ModelAdmin):
     list_display = ('visitor_id', 'state', 'residential_lga', 'contact_address')
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
@@ -53,56 +53,56 @@ class AppointmentsAdmin(admin.ModelAdmin):
     list_display = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time',
                     'visit_end_time', 'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out',
                     'entrance_id')
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class VehicleAdmin(admin.ModelAdmin):
     list_display = ('appointments_id', 'license', 'model', 'vehicle_type', 'color',)
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class RestrictedItemsManagementAdmin(admin.ModelAdmin):
     list_display = ('item_type', 'item_name', 'item_code', 'appointment_id',)
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class CompanyEntranceNamesAdmin(admin.ModelAdmin):
     list_display = ('entrance_name',)
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 
 class CompanyDepartmentsAdmin(admin.ModelAdmin):
     list_display = ('department_name', 'description')
-    readonly_fields = ('uuid', 'changed_by')
+    readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):
         if obj.uuid is None:
             obj.uuid = uuid.uuid4()
-            obj.changed_by = request.user
+            obj.created_by = request.user
         obj.save()
 
 admin.site.unregister(User)

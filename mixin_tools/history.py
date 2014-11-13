@@ -12,8 +12,7 @@ class HistoryFieldsMixin(models.Model):
     '''
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey('auth.User', null=True, blank=True)
-    modified_by = models.ForeignKey('auth.User', null=True, blank=True)
+    created_by = models.ForeignKey('auth.User', null=True, blank=True,)
     uuid = UUIDField(auto_created=True, unique=True)
 
     # Used by django-simple-history

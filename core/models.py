@@ -17,6 +17,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class CompanyDepartments(HistoryFieldsMixin):
     department_name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='department_modified_by')
 
     class Meta:
         app_label = 'core'
@@ -44,6 +45,7 @@ class UserProfile(models.Model):
 
 class CompanyEntranceNames(HistoryFieldsMixin):
     entrance_name = models.CharField(max_length=50, unique=True)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='entrance_modified_by')
 
     class Meta:
         app_label = 'core'
@@ -55,6 +57,7 @@ class CompanyEntranceNames(HistoryFieldsMixin):
 class VisitorGroup(HistoryFieldsMixin):
     group_name = models.CharField(max_length=50, unique=True)
     black_listed = models.BooleanField(default=False)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='group_modified_by')
 
     class Meta:
         app_label = 'core'
@@ -79,6 +82,7 @@ class Visitors(HistoryFieldsMixin):
     fingerprint = models.TextField(max_length=100, blank=True, null=True)
     scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
     group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True, related_name="group")
 
     class Meta:
@@ -93,10 +97,12 @@ class VisitorsLocation(HistoryFieldsMixin):
     state = models.CharField(max_length=5)
     residential_lga = models.CharField(max_length=5)
     contact_address = models.CharField(max_length=100)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='location_modified_by')
 
 
 class Appointments(HistoryFieldsMixin):
     visitor_id = models.ForeignKey(Visitors, to_field="uuid", related_name="visitor")
+    #modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='appointment_modified_by')
     representing = models.CharField(max_length=100, blank=True, null=True)
     purpose = models.CharField(max_length=50, blank=True, null=True)
     appointment_date = models.DateField()
@@ -119,6 +125,7 @@ class Vehicle(HistoryFieldsMixin):
     model = models.CharField(max_length=50, blank=True, null=True)
     vehicle_type = models.CharField(max_length=50, blank=True, null=True)
     color = models.CharField(blank=True, null=True, max_length=20)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='vehicle_modified_by')
 
 
 class MessageQueue(HistoryFieldsMixin):
@@ -127,6 +134,7 @@ class MessageQueue(HistoryFieldsMixin):
     subject = models.IntegerField(blank=True, null=True)
     status = models.IntegerField(default=0)
     type = models.IntegerField(max_length=2, default=0)
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='message_modified_by')
 
 
 class AppLicenseDuration(models.Model):
@@ -140,3 +148,4 @@ class RestrictedItems(HistoryFieldsMixin):
     item_name = models.CharField(max_length=50)
     item_code = models.CharField(max_length=50)
     appointment_id = models.ForeignKey(Appointments, blank=True, null=True, related_name="restricted_items")
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='items_modified_by')

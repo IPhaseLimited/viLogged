@@ -2,8 +2,10 @@
 import os
 import sys
 import platform
+import djcelery
 SYS_OS = platform.system()
 
+djcelery.setup_loader()
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PARENT = os.path.dirname(PROJECT_ROOT)
 sys.path.insert(0, PROJECT_ROOT)
@@ -112,7 +114,7 @@ ROOT_URLCONF = 'viLogged.urls'
 WSGI_APPLICATION = 'viLogged.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, "templates"),
+    os.path.join(PROJECT_ROOT, 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

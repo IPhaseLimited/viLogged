@@ -13,6 +13,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id')
+        filter_fields = ('phone', 'home_phone', 'work_phone',)
 
 
 class UserProfileNestedSerializer(serializers.ModelSerializer):
@@ -22,6 +23,7 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
         model = UserProfile
         serializer_class = UserProfileSerializer
         fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id')
+        filter_fields = ('phone', 'home_phone', 'work_phone',)
 
 
 class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -81,12 +83,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
                   'is_superuser', 'user_profile')
+        filter_fields = ('username', 'email',)
         write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):
         # call set_password on user object. Without this
         # the password will be stored in plain text.
         user = super(UserSerializer, self).restore_object(attrs, instance)
+        print(user, 'kkk')
         user.set_password(attrs['password'])
         return user
 
@@ -98,6 +102,7 @@ class UserNestedSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
                   'is_superuser', 'user_profile')
+        filter_fields = ('username', 'email',)
         write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):
