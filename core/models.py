@@ -15,7 +15,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 # Create your models here.
 class CompanyDepartments(HistoryFieldsMixin):
-    department_name = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='department_modified_by')
 

@@ -96,9 +96,6 @@ class UserSerializer(serializers.ModelSerializer):
         # call set_password on user object. Without this
         # the password will be stored in plain text.
         user = super(UserSerializer, self).restore_object(attrs, instance)
-        user_profile = attrs['user_profile']
-        userp = UserProfile().objects.get(user_id=attrs['id'])
-
         user.set_password(attrs['password'])
         return user
 
