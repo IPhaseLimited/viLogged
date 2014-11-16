@@ -24,7 +24,8 @@ class VisitorSerializer(serializers.ModelSerializer):
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
                   'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
-                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid',)
+                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'created',
+                  'modified', 'modified_by', 'created_by',)
         lookup_field = 'uuid',
         filter_fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'visitors_pass_code',
                          'fingerprint', 'scanned_signature', 'date_of_birth', 'created', 'modified', 'modified_by',
@@ -32,12 +33,12 @@ class VisitorSerializer(serializers.ModelSerializer):
 
 
 class VisitorNestedSerializer(serializers.ModelSerializer):
-    current_location = VisitorsLocationSerializer(many=True)
+    current_location = VisitorsLocationSerializer(many=False)
 
     class Meta:
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
-                  'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
+                  'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'current_location',
                   'created', 'modified', 'modified_by', 'created_by')
         lookup_field = 'uuid'
@@ -46,7 +47,7 @@ class VisitorNestedSerializer(serializers.ModelSerializer):
 class VisitorsLocationList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
     queryset = VisitorsLocation.objects.all()
     serializer_class = VisitorsLocationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -60,7 +61,7 @@ class VisitorsLocationDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 
     queryset = VisitorsLocation.objects.all()
     serializer_class = VisitorsLocationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -80,7 +81,7 @@ class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
     queryset = Visitors.objects.all()
     serializer_class = VisitorSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -103,7 +104,7 @@ class VisitorsNestedList(generics.ListAPIView, mixins.CreateModelMixin, mixins.U
 
 
 class VisitorNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-                    generics.GenericAPIView, mixins.CreateModelMixin):
+                          generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Visitors.objects.all()
     serializer_class = VisitorNestedSerializer
     permission_classes = (permissions.IsAuthenticated,)

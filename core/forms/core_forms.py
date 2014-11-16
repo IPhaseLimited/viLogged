@@ -10,7 +10,7 @@ User = get_user_model()
 class UserProfileFrom(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'image_url', 'department', 'designation', 'home_phone', 'work_phone')
+        fields = ('user_id', 'phone', 'image', 'department', 'designation', 'home_phone', 'work_phone')
 
         widgets = {
             'user_id': forms.Select(attrs={"class": "form-control"}),
@@ -88,8 +88,8 @@ class VisitorsForm(forms.ModelForm):
     class Meta:
         model = Visitors
         fields = ['first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
-                  'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
-                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality']
+                  'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
+                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'modified_by', 'uuid']
 
     def save(self, commit=True):
         visitor = super(VisitorsForm, self).save(commit=False)

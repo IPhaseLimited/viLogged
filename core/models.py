@@ -34,7 +34,7 @@ class UserProfile(models.Model):
     department = models.ForeignKey(CompanyDepartments, to_field='uuid', blank=True, null=True,
                                    related_name='company_name')
     designation = models.CharField(max_length=50, blank=True, null=True)
-    image_url = models.TextField(blank=True, null=True)
+    image = models.TextField(blank=True, null=True)
 
     class Meta:
         app_label = 'core'
@@ -70,7 +70,7 @@ class Visitors(HistoryFieldsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     visitors_email = models.EmailField(max_length=50, unique=True)
-    visitors_phone = models.CharField(max_length=20)
+    visitors_phone = models.CharField(max_length=20, unique=True, verbose_name='visitors phone number')
     occupation = models.CharField(max_length=50, blank=True, null=True)
     company_name = models.CharField(max_length=50, blank=True, null=True)
     company_address = models.CharField(max_length=100, blank=True, null=True)
@@ -78,7 +78,7 @@ class Visitors(HistoryFieldsMixin):
     nationality = models.CharField(max_length=20, blank=True, null=True)
     state_of_origin = models.CharField(max_length=50, blank=True, null=True)
     lga_of_origin = models.CharField(max_length=50, blank=True, null=True)
-    image_url = models.TextField(blank=True, null=True)
+    image = models.TextField(blank=True, null=True)
     fingerprint = models.TextField(max_length=100, blank=True, null=True)
     scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)

@@ -5,7 +5,7 @@ from core.models import *
 
 
 class UserProfileAdmin(admin.StackedInline):
-    list_display = ('user_id', 'phone', 'image_url', 'department', 'designation')
+    list_display = ('user_id', 'phone', 'image', 'department', 'designation')
     model = UserProfile
 
 
@@ -15,8 +15,8 @@ class UserAdmin(admin.ModelAdmin):
 
 class VisitorsAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'created_by')
-    list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
-                    'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
+    list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'created',
+                    'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                     'fingerprint', 'scanned_signature', 'visitors_pass_code',)
 
     #prepopulated_fields = {'uuid': (uuid.uuid4(),)}
