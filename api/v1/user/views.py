@@ -8,7 +8,7 @@ from api.v1.core.serializers import CompanyDepartmentsSerializer
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    #department = UUIDRelatedField()
+    department = UUIDRelatedField()
 
     class Meta:
         model = UserProfile
@@ -59,6 +59,9 @@ class UserProfileDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
 
 class UserProfileNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                               generics.GenericAPIView, mixins.CreateModelMixin):
@@ -75,6 +78,9 @@ class UserProfileNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
 
 class UserSerializer(serializers.ModelSerializer):
     user_profile = UserProfileSerializer(many=False)
@@ -90,7 +96,9 @@ class UserSerializer(serializers.ModelSerializer):
         # call set_password on user object. Without this
         # the password will be stored in plain text.
         user = super(UserSerializer, self).restore_object(attrs, instance)
-        print(user, 'kkk')
+        user_profile = attrs['user_profile']
+        userp = UserProfile().objects.get(user_id=attrs['id'])
+
         user.set_password(attrs['password'])
         return user
 
@@ -162,10 +170,32 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+
+        try:
+            return self.update(request, *args, **kwargs)
+        except:
+            user_profile = request.DATA.get('user_profile')
+            try:
+                department = user_profile['department']
+            except KeyError:
+                department = None
+
+            user_id = User.objects.get(id=request.DATA.get('id'))
+            new_profile = UserProfile(
+                phone=user_profile['phone'],
+                work_phone=user_profile['work_phone'],
+                home_phone=user_profile['home_phone'],
+                department=department,
+                user_id=user_id
+            ).save()
+            return self.update(request, *args, **kwargs)
+
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class GetUserByToken(generics.RetrieveAPIView):
