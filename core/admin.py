@@ -15,7 +15,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class VisitorsAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'created_by')
-    list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_id',
+    list_display = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
                     'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
                     'fingerprint', 'scanned_signature', 'visitors_pass_code',)
 
@@ -39,7 +39,7 @@ class VisitorGroupAdmin(admin.ModelAdmin):
 
 
 class VisitorsLocationAdmin(admin.ModelAdmin):
-    list_display = ('visitor_id', 'state', 'residential_lga', 'contact_address')
+    list_display = ('visitor_id', 'residential_state', 'residential_lga', 'contact_address')
     readonly_fields = ('uuid', 'created_by')
 
     def save_model(self, request, obj, form, change):

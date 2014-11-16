@@ -83,7 +83,7 @@ class Visitors(HistoryFieldsMixin):
     scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
-    group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True, related_name="group")
+    #group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True, related_name="group")
 
     class Meta:
         app_label = 'core'
@@ -94,15 +94,16 @@ class Visitors(HistoryFieldsMixin):
 
 class VisitorsLocation(HistoryFieldsMixin):
     visitor_id = models.ForeignKey(Visitors, to_field="uuid", blank=True, null=True, related_name='current_location')
-    state = models.CharField(max_length=5)
-    residential_lga = models.CharField(max_length=5)
+    residential_country = models.CharField(max_length=20)
+    residential_state = models.CharField(max_length=50)
+    residential_lga = models.CharField(max_length=50)
     contact_address = models.CharField(max_length=100)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='location_modified_by')
 
 
 class Appointments(HistoryFieldsMixin):
     visitor_id = models.ForeignKey(Visitors, to_field="uuid", related_name="visitor")
-    #modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='appointment_modified_by')
+    modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='appointment_modified_by')
     representing = models.CharField(max_length=100, blank=True, null=True)
     purpose = models.CharField(max_length=50, blank=True, null=True)
     appointment_date = models.DateField()

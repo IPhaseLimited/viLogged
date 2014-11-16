@@ -87,7 +87,7 @@ class UserCreateForm(UserCreationForm):
 class VisitorsForm(forms.ModelForm):
     class Meta:
         model = Visitors
-        fields = ['first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_id',
+        fields = ['first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
                   'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality']
 
