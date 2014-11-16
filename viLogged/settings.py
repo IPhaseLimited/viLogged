@@ -134,7 +134,7 @@ INSTALLED_APPS = (
     'appointments',
     'staff',
     'grappelli',
-    'django.contrib.admin',,
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
