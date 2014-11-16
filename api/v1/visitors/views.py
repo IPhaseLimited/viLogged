@@ -23,7 +23,7 @@ class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
-                  'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
+                  'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid',)
         lookup_field = 'uuid',
         filter_fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'visitors_pass_code',
