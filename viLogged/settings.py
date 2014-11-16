@@ -2,10 +2,8 @@
 import os
 import sys
 import platform
-import djcelery
 SYS_OS = platform.system()
 
-djcelery.setup_loader()
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PARENT = os.path.dirname(PROJECT_ROOT)
 sys.path.insert(0, PROJECT_ROOT)
@@ -136,9 +134,7 @@ INSTALLED_APPS = (
     'appointments',
     'staff',
     'grappelli',
-    'django.contrib.admin',
-    'django_twilio',
-    'corsheaders',
+    'django.contrib.admin',,
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
