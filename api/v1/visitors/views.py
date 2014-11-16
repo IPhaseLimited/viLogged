@@ -11,7 +11,8 @@ class VisitorsLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VisitorsLocation
-        fields = ('visitor_id', 'residential_country', 'residential_state', 'residential_state', 'residential_lga', 'contact_address', 'uuid')
+        fields = ('visitor_id', 'residential_country', 'residential_state', 'residential_state', 'residential_lga',
+                  'contact_address', 'uuid', 'created', 'modified', 'modified_by', 'created_by')
         lookup_field = 'uuid'
         filter_fields = ('visitor_id',)
 
@@ -26,7 +27,8 @@ class VisitorSerializer(serializers.ModelSerializer):
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid',)
         lookup_field = 'uuid',
         filter_fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'visitors_pass_code',
-                         'fingerprint', 'scanned_signature', 'date_of_birth',)
+                         'fingerprint', 'scanned_signature', 'date_of_birth', 'created', 'modified', 'modified_by',
+                         'created_by',)
 
 
 class VisitorNestedSerializer(serializers.ModelSerializer):
@@ -36,7 +38,8 @@ class VisitorNestedSerializer(serializers.ModelSerializer):
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth',
                   'state_of_origin', 'lga_of_origin', 'image_url', 'occupation', 'company_name', 'company_address',
-                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'current_location')
+                  'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'current_location',
+                  'created', 'modified', 'modified_by', 'created_by')
         lookup_field = 'uuid'
 
 
