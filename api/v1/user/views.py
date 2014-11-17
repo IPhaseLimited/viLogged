@@ -140,18 +140,20 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 
 class UserList(generics.ListAPIView, mixins.CreateModelMixin):
-    queryset = User.objects.all()
+    model = User
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
 
 class UserNestedList(generics.ListAPIView, mixins.CreateModelMixin):
-    queryset = User.objects.all()
+    model = User
     serializer_class = UserNestedSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -159,7 +161,7 @@ class UserNestedList(generics.ListAPIView, mixins.CreateModelMixin):
 
 class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                  generics.GenericAPIView, mixins.CreateModelMixin):
-    queryset = User.objects.all()
+    model = User
     serializer_class = UserDetailSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -186,7 +188,6 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
                 user_id=user_id
             ).save()
             return self.update(request, *args, **kwargs)
-
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

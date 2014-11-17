@@ -27,9 +27,6 @@ class VisitorSerializer(serializers.ModelSerializer):
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'created',
                   'modified', 'modified_by', 'created_by',)
         lookup_field = 'uuid',
-        filter_fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'visitors_pass_code',
-                         'fingerprint', 'scanned_signature', 'date_of_birth', 'created', 'modified', 'modified_by',
-                         'created_by',)
 
 
 class VisitorNestedSerializer(serializers.ModelSerializer):
@@ -45,8 +42,9 @@ class VisitorNestedSerializer(serializers.ModelSerializer):
 
 
 class VisitorsLocationList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
-    queryset = VisitorsLocation.objects.all()
+    model = VisitorsLocation
     serializer_class = VisitorsLocationSerializer
+    filter_fields = ('visitor_id',)
     #permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -59,10 +57,11 @@ class VisitorsLocationList(generics.ListAPIView, mixins.CreateModelMixin, mixins
 class VisitorsLocationDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                              generics.GenericAPIView, mixins.CreateModelMixin):
 
-    queryset = VisitorsLocation.objects.all()
+    model = VisitorsLocation
     serializer_class = VisitorsLocationSerializer
     #permission_classes = (permissions.IsAuthenticated,)
     lookup_field = 'uuid'
+    filter_fields = ('visitor_id',)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -79,8 +78,12 @@ class VisitorsLocationDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 
 class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
 
-    queryset = Visitors.objects.all()
+    #queryset = Visitors.objects.all()
+    model = Visitors
     serializer_class = VisitorSerializer
+    filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code',
+                         'fingerprint', 'date_of_birth', 'created', 'modified', 'modified_by',
+                         'created_by',)
     #permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
