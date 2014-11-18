@@ -44,7 +44,7 @@ class VehicleList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -54,7 +54,7 @@ class VehicleDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
                     generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -71,7 +71,7 @@ class RestrictedItemsList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = RestrictedItems.objects.all()
     serializer_class = RestrictedItemsSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -81,7 +81,7 @@ class RestrictedItemsDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, 
                             generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = RestrictedItems.objects.all()
     serializer_class = RestrictedItemsSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -98,7 +98,7 @@ class CompanyDepartmentsList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = CompanyDepartments.objects.all()
     serializer_class = CompanyDepartmentsSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -108,7 +108,7 @@ class CompanyDepartmentsDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixi
                                generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = CompanyDepartments.objects.all()
     serializer_class = CompanyDepartmentsSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -125,7 +125,7 @@ class CompanyEntranceNamesList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = CompanyEntranceNames.objects.all()
     serializer_class = CompanyEntranceNamesSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -135,7 +135,7 @@ class CompanyEntranceNamesDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMi
                                  generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = CompanyEntranceNames.objects.all()
     serializer_class = CompanyEntranceNamesSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):

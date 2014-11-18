@@ -29,7 +29,7 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
 class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileNestedSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -38,7 +38,7 @@ class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
 class UserProfileList(generics.ListAPIView, mixins.CreateModelMixin):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -48,7 +48,7 @@ class UserProfileDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
                         generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -142,7 +142,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class UserList(generics.ListAPIView, mixins.CreateModelMixin):
     model = User
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone')
 
     def post(self, request, *args, **kwargs):
@@ -152,7 +152,7 @@ class UserList(generics.ListAPIView, mixins.CreateModelMixin):
 class UserNestedList(generics.ListAPIView, mixins.CreateModelMixin):
     model = User
     serializer_class = UserNestedSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone')
 
     def post(self, request, *args, **kwargs):
@@ -163,7 +163,7 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
                  generics.GenericAPIView, mixins.CreateModelMixin):
     model = User
     serializer_class = UserDetailSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -199,7 +199,7 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
 class GetUserByToken(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def retrieve(self, request, pk=None):
         """
