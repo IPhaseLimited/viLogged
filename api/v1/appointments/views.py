@@ -3,7 +3,7 @@ from core.models import Appointments, RestrictedItems, Vehicle
 from api.permissions import *
 from api.serializer import *
 from api.v1.visitors.views import VisitorSerializer
-from api.v1.user.views import UserSerializer
+from api.v1.user.views import UserNestedSerializer, UserProfileNestedSerializer
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
     visitor_id = VisitorSerializer(many=False)
-    host_id = UserSerializer(many=False)
+    host_id = UserNestedSerializer(many=False)
 
     class Meta:
         model = Appointments
@@ -31,7 +31,7 @@ class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = Appointments.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def post(self, request, *args, **kwargs):
@@ -42,7 +42,7 @@ class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
 
     queryset = Appointments.objects.all()
     serializer_class = AppointmentNestedSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def post(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
                         generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Appointments.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -70,7 +70,7 @@ class AppointmentNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
                               generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Appointments.objects.all()
     serializer_class = AppointmentNestedSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     lookup_field = 'uuid'
 

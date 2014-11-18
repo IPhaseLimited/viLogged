@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^visitors-location/(?P<uuid>\w+)/?$', VisitorsLocationDetail.as_view()),
     url(r'^user/?', include('api.v1.user.url')),
 
-    url(r'^company-entrances/?$', CompanyEntranceNamesList.as_view()),
+    url(r'^company-entrance/?$', CompanyEntranceNamesList.as_view()),
     url(r'^company-entrance/(?P<uuid>\w+)/?$', CompanyEntranceNamesDetail.as_view()),
     url(r'^company-departments/?$', CompanyDepartmentsList.as_view()),
     url(r'^company-departments/(?P<uuid>\w+)/?$', CompanyDepartmentsDetail.as_view()),

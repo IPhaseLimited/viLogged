@@ -45,7 +45,7 @@ class VisitorsLocationList(generics.ListAPIView, mixins.CreateModelMixin, mixins
     model = VisitorsLocation
     serializer_class = VisitorsLocationSerializer
     filter_fields = ('visitor_id',)
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -59,7 +59,7 @@ class VisitorsLocationDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 
     model = VisitorsLocation
     serializer_class = VisitorsLocationSerializer
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
     filter_fields = ('visitor_id',)
 
@@ -84,7 +84,7 @@ class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateM
     filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code',
                          'fingerprint', 'date_of_birth', 'created', 'modified', 'modified_by',
                          'created_by',)
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -95,9 +95,12 @@ class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
 class VisitorsNestedList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
 
-    queryset = Visitors.objects.all()
+    model = Visitors
     serializer_class = VisitorNestedSerializer
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code',
+                         'fingerprint', 'date_of_birth', 'created', 'modified', 'modified_by',
+                         'created_by',)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -110,7 +113,7 @@ class VisitorNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mi
                           generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Visitors.objects.all()
     serializer_class = VisitorNestedSerializer
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):
@@ -130,7 +133,7 @@ class VisitorDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
                     generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Visitors.objects.all()
     serializer_class = VisitorSerializer
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
     def get(self, request, *args, **kwargs):

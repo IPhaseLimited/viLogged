@@ -5,5 +5,4 @@ urlpatterns = patterns('',
     url(r'^$', AppointmentList.as_view()),
     url(r'^(?P<uuid>\w+)$', AppointmentDetail.as_view()),
     url(r'^nested/(?P<uuid>\w+)$', AppointmentNestedDetail.as_view()),
-
 )
