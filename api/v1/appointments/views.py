@@ -29,10 +29,12 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
 
-    queryset = Appointments.objects.all()
+    model = Appointments
     serializer_class = AppointmentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required',
+                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -40,10 +42,12 @@ class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
 
 class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
 
-    queryset = Appointments.objects.all()
+    model = Appointments
     serializer_class = AppointmentNestedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required',
+                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -51,10 +55,12 @@ class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
 
 class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                         generics.GenericAPIView, mixins.CreateModelMixin):
-    queryset = Appointments.objects.all()
+    model = Appointments
     serializer_class = AppointmentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required',
+                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -68,11 +74,12 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
 
 class AppointmentNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                               generics.GenericAPIView, mixins.CreateModelMixin):
-    queryset = Appointments.objects.all()
+    model = Appointments
     serializer_class = AppointmentNestedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
     lookup_field = 'uuid'
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required',
+                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid')
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
