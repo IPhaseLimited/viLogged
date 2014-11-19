@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^send-email/?$', SendEmail.as_view()),
     url(r'^vehicles/?$', VehicleList.as_view()),
     url(r'^vehicle/(?P<uuid>\w+)/?$', VehicleDetail.as_view()),
-    url(r'^visitor/nested/?$', VisitorsNestedList.as_view()),
+    url(r'^visitors/nested/?$', VisitorsNestedList.as_view()),
     url(r'^users/?$', UserList.as_view()),
     url(r'^users/nested/?$', UserNestedList.as_view()),
 
