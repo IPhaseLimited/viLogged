@@ -9,7 +9,7 @@ from api.v1.user.views import UserNestedSerializer, UserProfileNestedSerializer
 
 class AppointmentSerializer(serializers.ModelSerializer):
     visitor_id = UUIDRelatedField(many=False)
-    entrance_id = UUIDRelatedField(many=False)
+    entrance_id = UUIDRelatedField(many=False, blank=True)
 
     class Meta:
         model = Appointments
