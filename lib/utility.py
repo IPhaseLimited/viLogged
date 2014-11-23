@@ -26,7 +26,7 @@ class Utility():
     @staticmethod
     def sms(sms_api=None, params=None):
         if params is None:
-            params = {"username":"musakunte@gmail.com","password": "1979mall", "sender": "Musa",
+            params = {"username":"musakunte@gmail.com","password": "nccSMStest20", "sender": "Musa",
                       "mobiles": "2348093976395", "message": "test sms"}
         if sms_api is None:
             sms_api = "http://login.betasms.com/customer/api/"
