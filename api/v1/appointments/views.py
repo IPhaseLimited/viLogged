@@ -13,9 +13,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointments
-        fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time',
-                  'visit_end_time', 'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in',
-                  'checked_out', 'entrance_id', 'uuid')
+        fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
+                  'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
+                  'uuid')
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
@@ -25,9 +25,9 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointments
-        fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time',
-                  'visit_end_time', 'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in',
-                  'checked_out', 'entrance_id', 'uuid', 'visitor_id')
+        fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
+                  'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
+                  'visitor_id')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -73,6 +73,9 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class AppointmentNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
