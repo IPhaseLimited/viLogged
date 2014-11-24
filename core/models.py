@@ -83,7 +83,7 @@ class Visitors(HistoryFieldsMixin):
     scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
-    #group_id = models.ForeignKey(VisitorGroup, to_field='uuid', blank=True, null=True, related_name="group")
+    group_type = models.IntegerField(blank=True, null=True)
 
     class Meta:
         app_label = 'core'
