@@ -1,7 +1,7 @@
 from rest_framework import serializers, generics, mixins
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from core.models import UserProfile
+from core.models import UserProfile, CompanyDepartments
 from api.permissions import *
 from api.serializer import *
 from api.v1.core.serializers import CompanyDepartmentsSerializer
@@ -180,6 +180,7 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
                 department = None
 
             user_id = User.objects.get(id=request.DATA.get('id'))
+            department = CompanyDepartments.objects.get(uuid=department)
             new_profile = UserProfile(
                 phone=user_profile['phone'],
                 work_phone=user_profile['work_phone'],
