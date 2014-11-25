@@ -1,6 +1,6 @@
 from rest_framework import serializers, generics, mixins
 from core.models import Appointments, RestrictedItems, Vehicle
-from api.v1.core.serializers import CompanyEntranceNamesSerializer
+from api.v1.core.serializers import CompanyEntranceNamesSerializer, VehicleSerializer, RestrictedItemsSerializer
 from api.permissions import *
 from api.serializer import *
 from api.v1.visitors.views import VisitorSerializer
@@ -22,12 +22,14 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
     visitor_id = VisitorSerializer(many=False)
     host_id = UserNestedSerializer(many=False)
     entrance_id = CompanyEntranceNamesSerializer(many=False)
+    vehicle = VehicleSerializer(many=False)
+    restricted_items = RestrictedItemsSerializer(many=True)
 
     class Meta:
         model = Appointments
         fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
                   'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
-                  'visitor_id')
+                  'visitor_id', 'vehicle', 'restricted_items')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
