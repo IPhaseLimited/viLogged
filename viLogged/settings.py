@@ -15,18 +15,19 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-if SYS_OS is 'Windows':
-    DATABASES = {
-        'default': {
-            'NAME': 'viLogged',
-            'ENGINE': 'sqlserver_ado',
-            'HOST': 'musa\\SQLEXPRESS',
-            'USER': '',
-            'PASSWORD': '',
-        }
-    }
-else:
-    DATABASES = {
+# if SYS_OS is 'Windows':
+#     DATABASES = {
+#         'default': {
+#             'NAME': 'viLogged',
+#             'ENGINE': 'sqlserver_ado',
+#             'HOST': 'musa\\SQLEXPRESS',
+#             'USER': '',
+#             'PASSWORD': '',
+#         }
+#     }
+# else:
+
+DATABASES = {
         'default': {
             'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
             'ENGINE': 'django.db.backends.sqlite3',
