@@ -20,8 +20,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
         # call set_password on user object. Without this
         # the password will be stored in plain text.
         appointment = super(AppointmentSerializer, self).restore_object(attrs, instance)
-
-
+        eid = attrs['entrance_id']
+        if eid is not None:
+            eid_id = CompanyEntranceNames.objects.get(uuid=eid)['id']
+            attrs['entrance_id'] = eid
         return appointment
 
 
