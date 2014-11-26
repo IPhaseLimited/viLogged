@@ -1,5 +1,5 @@
 from rest_framework import serializers, generics, mixins
-from core.models import Appointments, RestrictedItems, Vehicle
+from core.models import Appointments, RestrictedItems, Vehicle, CompanyEntranceNames
 from api.v1.core.serializers import CompanyEntranceNamesSerializer, VehicleSerializer, RestrictedItemsSerializer
 from api.permissions import *
 from api.serializer import *
@@ -9,13 +9,20 @@ from api.v1.user.views import UserNestedSerializer, UserProfileNestedSerializer
 
 class AppointmentSerializer(serializers.ModelSerializer):
     visitor_id = UUIDRelatedField(many=False)
-    entrance_id = UUIDRelatedField(many=False, blank=True)
 
     class Meta:
         model = Appointments
         fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
                   'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
                   'uuid')
+
+    def restore_object(self, attrs, instance=None):
+        # call set_password on user object. Without this
+        # the password will be stored in plain text.
+        appointment = super(AppointmentSerializer, self).restore_object(attrs, instance)
+
+
+        return appointment
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
