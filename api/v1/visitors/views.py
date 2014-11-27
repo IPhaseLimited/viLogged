@@ -1,6 +1,5 @@
 from rest_framework import serializers, generics, mixins, views
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from core.models import Visitors, VisitorGroup, VisitorsLocation
 from api.permissions import *
 from api.serializer import *
@@ -78,7 +77,6 @@ class VisitorsLocationDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 
 class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
 
-    #queryset = Visitors.objects.all()
     model = Visitors
     serializer_class = VisitorSerializer
     filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code', 'fingerprint', 'date_of_birth',

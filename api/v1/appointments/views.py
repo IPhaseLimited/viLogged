@@ -9,22 +9,12 @@ from api.v1.user.views import UserNestedSerializer, UserProfileNestedSerializer
 
 class AppointmentSerializer(serializers.ModelSerializer):
     visitor_id = UUIDRelatedField(many=False)
-
+    entrance_id = UUIDRelatedField(many=False)
     class Meta:
         model = Appointments
         fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
                   'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
-                  'uuid')
-
-    def restore_object(self, attrs, instance=None):
-        # call set_password on user object. Without this
-        # the password will be stored in plain text.
-        appointment = super(AppointmentSerializer, self).restore_object(attrs, instance)
-        eid = attrs['entrance_id']
-        if eid is not None:
-            eid_id = CompanyEntranceNames.objects.get(uuid=eid)['id']
-            attrs['entrance_id'] = eid
-        return appointment
+                  'uuid', 'label_code')
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
@@ -38,7 +28,7 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
                   'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
-                  'visitor_id', 'vehicle', 'restricted_items')
+                  'visitor_id', 'vehicle', 'restricted_items', 'label_code')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -46,9 +36,10 @@ class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
     model = Appointments
     serializer_class = AppointmentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    lookup_field = 'uuid'
+    #lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required',
-                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
+                     'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
+                     'visitor_id')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -60,8 +51,9 @@ class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
     serializer_class = AppointmentNestedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
-    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required',
-                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid')
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required', 'uuid',
+                     'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'visitor_id__uuid',
+                     'entrance_id')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -73,7 +65,7 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
     serializer_class = AppointmentSerializer
     #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
-    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required',
+    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required', 'label_code'
                      'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
 
     def get(self, request, *args, **kwargs):
@@ -96,7 +88,8 @@ class AppointmentNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required',
-                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid')
+                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid',
+                     'label_code')
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

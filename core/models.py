@@ -115,7 +115,7 @@ class Appointments(HistoryFieldsMixin):
     is_expired = models.BooleanField(default=False)
     checked_in = models.DateTimeField(default=None, blank=True, null=True)
     checked_out = models.DateTimeField(blank=True, null=True)
-    label_code = models.CharField(max_length=50)
+    label_code = models.CharField(max_length=50, null=True, blank=True)
     entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid",
                                     related_name="entrance")
 
