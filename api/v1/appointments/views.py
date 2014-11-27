@@ -16,6 +16,16 @@ def filter_from_url(query_params):
     is_approved = query_params.get('is_approved', None)
     is_expired = query_params.get('is_expired', None)
     label_code = query_params.get('label_code', None)
+    host_id = query_params.get('host_id', None)
+    visitor_id = query_params.get('visitor_id', None)
+
+    def str_to_bool(s):
+        if s == 'True' or s == 'true':
+            return True
+        elif s == 'False' or s == 'false':
+            return False
+        else:
+            raise ValueError
 
     if uuid is not None:
         queryset = queryset.filter(uuid=uuid)
@@ -24,11 +34,16 @@ def filter_from_url(query_params):
     if host_id__id is not None:
         queryset = queryset.filter(host_id__id=host_id__id)
     if is_approved is not None:
-        queryset = queryset.filter(is_approved=is_approved)
+        queryset = queryset.filter(is_approved=str_to_bool(is_approved))
     if is_expired is not None:
-        queryset = queryset.filter(is_expired=is_expired)
+        queryset = queryset.filter(is_expired=str_to_bool(is_expired))
     if label_code is not None:
         queryset = queryset.filter(label_code=label_code)
+    if host_id is not None:
+        queryset = queryset.filter(host_id=host_id)
+    if visitor_id is not None:
+        queryset = queryset.filter(visitor_id=visitor_id)
+
     return queryset
 
 
