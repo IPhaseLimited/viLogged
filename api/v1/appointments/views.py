@@ -41,6 +41,35 @@ class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
                      'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
                      'visitor_id')
 
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+
+        queryset = Appointments.objects.all()
+
+        uuid = self.request.QUERY_PARAMS.get('uuid', None)
+        visitor_id__uuid = self.request.QUERY_PARAMS.get('visitor_id__uuid', None)
+        host_id__id = self.request.QUERY_PARAMS.get('host_id__id', None)
+        is_approved = self.request.QUERY_PARAMS.get('is_approved', None)
+        is_expired = self.request.QUERY_PARAMS.get('is_expired', None)
+        label_code = self.request.QUERY_PARAMS.get('label_code', None)
+
+        if uuid is not None:
+            queryset = queryset.filter(uuid=uuid)
+        if visitor_id__uuid is not None:
+            queryset = queryset.filter(visitor_id__uuid=visitor_id__uuid)
+        if host_id__id is not None:
+            queryset = queryset.filter(host_id__id=host_id__id)
+        if is_approved is not None:
+            queryset = queryset.filter(is_approved=is_approved)
+        if is_expired is not None:
+            queryset = queryset.filter(is_expired=is_expired)
+        if label_code is not None:
+            queryset = queryset.filter(label_code=label_code)
+        return queryset
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
@@ -55,6 +84,31 @@ class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
                      'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'visitor_id__uuid',
                      'entrance_id')
 
+    def get_queryset(self):
+
+        queryset = Appointments.objects.all()
+
+        uuid = self.request.QUERY_PARAMS.get('uuid', None)
+        visitor_id__uuid = self.request.QUERY_PARAMS.get('visitor_id__uuid', None)
+        host_id__id = self.request.QUERY_PARAMS.get('host_id__id', None)
+        is_approved = self.request.QUERY_PARAMS.get('is_approved', None)
+        is_expired = self.request.QUERY_PARAMS.get('is_expired', None)
+        label_code = self.request.QUERY_PARAMS.get('label_code', None)
+
+        if uuid is not None:
+            queryset = queryset.filter(uuid=uuid)
+        if visitor_id__uuid is not None:
+            queryset = queryset.filter(visitor_id__uuid=visitor_id__uuid)
+        if host_id__id is not None:
+            queryset = queryset.filter(host_id__id=host_id__id)
+        if is_approved is not None:
+            queryset = queryset.filter(is_approved=is_approved)
+        if is_expired is not None:
+            queryset = queryset.filter(is_expired=is_expired)
+        if label_code is not None:
+            queryset = queryset.filter(label_code=label_code)
+        return queryset
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
@@ -67,6 +121,31 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
     lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required', 'label_code'
                      'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
+
+    def get_queryset(self):
+
+        queryset = Appointments.objects.all()
+
+        uuid = self.request.QUERY_PARAMS.get('uuid', None)
+        visitor_id__uuid = self.request.QUERY_PARAMS.get('visitor_id__uuid', None)
+        host_id__id = self.request.QUERY_PARAMS.get('host_id__id', None)
+        is_approved = self.request.QUERY_PARAMS.get('is_approved', None)
+        is_expired = self.request.QUERY_PARAMS.get('is_expired', None)
+        label_code = self.request.QUERY_PARAMS.get('label_code', None)
+
+        if uuid is not None:
+            queryset = queryset.filter(uuid=uuid)
+        if visitor_id__uuid is not None:
+            queryset = queryset.filter(visitor_id__uuid=visitor_id__uuid)
+        if host_id__id is not None:
+            queryset = queryset.filter(host_id__id=host_id__id)
+        if is_approved is not None:
+            queryset = queryset.filter(is_approved=is_approved)
+        if is_expired is not None:
+            queryset = queryset.filter(is_expired=is_expired)
+        if label_code is not None:
+            queryset = queryset.filter(label_code=label_code)
+        return queryset
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
