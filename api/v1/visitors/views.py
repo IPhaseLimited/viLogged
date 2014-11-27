@@ -11,7 +11,7 @@ class VisitorsLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = VisitorsLocation
         fields = ('visitor_id', 'residential_country', 'residential_state', 'residential_state', 'residential_lga',
-                  'contact_address', 'uuid', 'created', 'modified', 'modified_by', 'created_by', 'gender')
+                  'contact_address', 'uuid', 'created', 'modified', 'modified_by', 'created_by')
         lookup_field = 'uuid'
         filter_fields = ('visitor_id',)
 
