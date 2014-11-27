@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block pageTitle %}<i class="fa fa-users"></i> Visitors Entry Form {% endblock %}
+{% block breadcrumb %}
+  <span class="divider">/</span>
+  <a href="#" class="bread-current">Visitors</a>
+{% endblock %}
+{% block main-content %}
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="widget">
+        <div class="widget-head">
+
+          <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
+            <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="widget-content">
+          <div style="padding: 40px;">
+            <form class="form-horizontal" action="" method="post" name="formID" id="formID">
+
+              <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input id="first_name" type="text" name="first_name" class="form-control" value="{% ifnotequal form.first_name.value None %}{{ form.first_name.value }}{% endifnotequal %}">
+                {% if form.errors.first_name %}<span class="text-danger bold">{{ form.first_name.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" type="text" name="last_name" class="form-control" value="{% ifnotequal form.last_name.value None %}{{ form.last_name.value }}{% endifnotequal %}">
+                {% if form.errors.last_name %}<span class="text-danger bold">{{ form.last_name.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="visitors_email">Email</label>
+                <input id="visitors_email" type="email" name="visitors_email" class="form-control" value="{% ifnotequal form.visitors_email.value None %}{{ form.visitors_email.value }}{% endifnotequal %}">
+                {% if form.errors.visitors_email %}<span class="text-danger bold">{{ form.visitors_email.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input id="occupation" type="text" name="occupation" class="form-control" value="{% ifnotequal form.occupation.value None %}{{ form.occupation.value }}{% endifnotequal %}">
+                {% if form.errors.occupation %}<span class="text-danger bold">{{ form.occupation.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="visitors_phone">Mobile</label>
+                <input id="visitors_phone" type="number" name="visitors_phone" class="form-control" value="{{ form.visitors_phone.value }}">
+                {% if form.errors.visitors_phone %}<span class="text-danger bold">{{ form.visitors_phone.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="date_of_birth">Date of Birth</label>
+                <input id="date_of_birth" type="text" name="date_of_birth" class="form-control" value="{% ifnotequal form.date_of_birth.value None %}{{ form.date_of_birth.value }}{% endifnotequal %}">
+                {% if form.errors.date_of_birth %}<span class="text-danger bold">{{ form.date_of_birth.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="company_name">Company</label>
+                <input id="company_name" type="text" name="company_name" class="form-control" value="{% ifnotequal form.company_name.value None %}{{ form.company_name.value }}{% endifnotequal %}">
+                {% if form.errors.company_name %}<span class="text-danger bold">{{ form.company_name.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="company_address">Company Address</label>
+                <input id="company_address" type="text" name="company_address" class="form-control" value="{% ifnotequal form.company_address.value None %}{{ form.company_address.value }}{% endifnotequal %}">
+                {% if form.errors.company_address %}<span class="text-danger bold">{{ form.company_address.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="group_id">Nationality</label>
+                <select id="group_id" name="group_id" class="form-control">
+                  <option value="">Select Group</option>
+                  {% for group in groups %}
+                  <option {% ifequal form.group.value group.uuid %} selected="selected" {% endifequal %}
+                    value="{{ group.uuid }}">{{ group.group_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="nationality">Nationality</label>
+                <select {% ifequal form.nationality.value nationality %} selected="selected" {% endifequal %}
+                  id="nationality" name="nationality" class="form-control">
+                  <option value="">Select Country</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="state_of_origin" >State of Origin</label>
+                <select {% ifequal form.state_of_origin.value state_of_origin %} selected="selected" {% endifequal %}
+                  id="state_of_origin" name="state_of_origin" class="form-control">
+                  <option value="">Select State</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lga">Local Government Area</label>
+                <select {% ifequal form.lga.value lga %} selected="selected" {% endifequal %}
+                  id="lga" name="lga" class="form-control">
+                  <option value="">Select Local Government Area</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="image_url">Upload Passport</label>
+                <input id="image_url" type="file" name="image_url" value="{% ifnotequal form.image_url.value None %}{{ form.image_url.value }}{% endifnotequal %}">
+                {% if form.errors.image_url %}<span class="text-danger bold">{{ form.image_url.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="fingerprint">Upload Scanned Fingerprint </label>
+                <input id="fingerprint" type="file" name="fingerprint" value="{% ifnotequal form.fingerprint.value None %}{{ form.fingerprint.value }}{% endifnotequal %}">
+                {% if form.fingerprint.image_url %}<span class="text-danger bold">{{ form.fingerprint.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="scanned_signature">Upload Scanned Signature</label>
+                <input id="scanned_signature" type="file" name="scanned_signature" value="{% ifnotequal form.scanned_signature.value None %}{{ form.scanned_signature.value }}{% endifnotequal %}">
+                {% if form.errors.scanned_signature %}<span class="text-danger bold">{{ form.scanned_signature.errors|striptags  }} </span>{% endif %}
+              </div>
+
+              <div class="form-group">
+                <div class="pull-right">
+                  <input class="btn btn-primary" type="submit" value="Create account">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+              {% csrf_token %}
+            </form>
+
+          </div>
+          <div class="widget-foot">
+            <!-- Footer goes here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block custom_js %}
+  <script src="/static/custom/js/visitors.js"></script>
+  <script src="/static/custom/js/locations.js"></script>
+{% endblock %}

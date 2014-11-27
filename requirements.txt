@@ -1,0 +1,14 @@
+Django==1.7
+Pillow
+pybarcode==0.7
+argparse==1.2.1
+django-braces==1.4.0
+django-extensions==1.4.0
+django-filter==0.7
+django-grappelli
+django-uuidfield==0.5.0
+djangorestframework
+six
+django-sendsms
+django_twilio
+git+git://github.com/ottoyiu/django-cors-headers.git

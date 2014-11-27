@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block pageTitle %}<i class="fa fa-users"></i> Visitors List {% endblock %}
+{% block breadcrumb %}
+<span class="divider">/</span>
+  <span class="bread-current">Visitors</span>
+{% endblock %}
+
+{% block main-content %}
+  <a class="btn btn-default" href="/add-visitor">Add Visitor</a>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="widget">
+      <!-- Widget title -->
+      <div class="widget-head">
+
+        <div class="widget-icons pull-right">
+          <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a>
+          <!--a href="#" class="wclose"><i class="fa fa-times"></i></a-->
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="widget-content">
+        <!-- Widget content -->
+
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>State of Origin</th>
+              <th>LGA</th>
+              <th>Date last Visited</th>
+              <th>Group</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          {% for row in object_list %}
+
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ row.first_name }}</td>
+              <td>{{ row.last_name }}</td>
+              <td>{{ row.visitors_email }}</td>
+              <td>{{ row.visitors_phone }}</td>
+              <td>{{ row.visitors_state }}</td>
+              <td>{{ row.lga }}</td>
+              <td>{{ row.last_visit }}</td>
+              <td>{{ row.group_id }}</td>
+              <td>
+                <a id="edit" class="btn btn-default" title="edit">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a id="remove" class="btn btn-default" title="edit">
+                  <i class="fa fa-times"></i>
+                </a>
+              </td>
+            </tr>
+    {% endfor %}
+          </tbody>
+          </table>
+
+
+        <div class="widget-foot">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block custom_js %}
+  <script src="/static/custom/js/visitors.js"></script>
+{% endblock %}

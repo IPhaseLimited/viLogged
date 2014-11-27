@@ -1,0 +1,4 @@
+django-mssql
+pyusb
+pywin32==219
+pywinusb
