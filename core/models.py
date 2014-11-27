@@ -28,6 +28,7 @@ class CompanyDepartments(HistoryFieldsMixin):
 
 class UserProfile(models.Model):
     user_id = models.OneToOneField(User, unique=True, blank=True, null=True, related_name='user_profile')
+    gender = models.CharField(max_length=10, default='Male')
     phone = models.CharField(max_length=20, unique=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)
@@ -70,6 +71,7 @@ class Visitors(HistoryFieldsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     visitors_email = models.EmailField(max_length=50, unique=True)
+    gender = models.CharField(max_length=10, default='Male')
     visitors_phone = models.CharField(max_length=20, unique=True, verbose_name='visitors phone number')
     occupation = models.CharField(max_length=50, blank=True, null=True)
     company_name = models.CharField(max_length=50, blank=True, null=True)
