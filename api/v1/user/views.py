@@ -12,7 +12,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
@@ -22,7 +22,7 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         serializer_class = UserProfileSerializer
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
