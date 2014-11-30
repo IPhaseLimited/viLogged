@@ -33,7 +33,7 @@ class JSONResponseMixin(object):
 
 
 def home(request, *args, **kwargs):
-    data = json.dumps({"message":"nothing to see here"})
+    data = json.dumps({"message":"This is viLogged API Server", 'ping': True})
     return HttpResponse(data, content_type='application/json')
 
 
