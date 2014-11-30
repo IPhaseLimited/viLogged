@@ -2,6 +2,7 @@
 import os
 import sys
 import platform
+import json
 SYS_OS = platform.system()
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +37,22 @@ DATABASES = {
             'PASSWORD': '',
         }
     }
+def loadConfig():
+    file_name = os.path.join(PROJECT_ROOT, 'config.json')
+    data = {}
+    if os.path.isfile(file_name):
+        file = open(file_name)
+        data = file.read()
+        return json.loads(data)
+    return data
+
+db_settings = loadConfig()
+
+DATABASES['default']['name'] = db_settings.get('name', os.path.join(PROJECT_ROOT, 'db.sqlite'))
+DATABASES['default']['ENGINE'] = db_settings.get('engine', 'django.db.backends.sqlite3')
+DATABASES['default']['HOST'] = db_settings.get('host', 'localhost')
+DATABASES['default']['USER'] = db_settings.get('user', '')
+DATABASES['default']['PASSWORD'] = db_settings.get('password', '')
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['localhost']
