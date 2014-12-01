@@ -1,12 +1,8 @@
-import json
-import datetime
-from django.contrib import messages
 from django.contrib.auth.views import login_required, login as django_login, logout as django_logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, ListView, FormView
 from braces.views import LoginRequiredMixin
-from core.models import Visitors, VisitorsLocation, Vehicle, Appointments
 from core.forms.core_forms import *
 from core.models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
@@ -111,30 +107,3 @@ def login(req, template_name=''):
 def logout(req, template_name=''):
     django_logout(req, **{"template_name": 'login.html'})
     return redirect('/')
-
-
-
-@csrf_exempt
-def send_email(request):
-    sent = Utility.send_email('Test Mail', 'test is cool', ['musa@musamusa.com'])
-    return HttpResponse('mail sent is {}'.format(sent))
-
-
-def sms(request):
-    sent = Utility.sms()
-    return HttpResponse('sms sent is {}'.format(sent))
-
-
-def load_bar_code(request):
-    filename = MEDIA_ROOT+'/img/ean13.png'
-    str_name = Utility.create_barcode('123344555')
-    context = {}
-    context['image_code'] = str_name
-    return render(request, 'test_image.html', context)
-
-
-def label(request):
-    filename = MEDIA_ROOT+'/img/ean13.png'
-    str_name = Utility.create_barcode('0000001')
-    context = {'image_code': str_name}
-    return render(request, 'lable.html', context)
