@@ -54,7 +54,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
                   'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
-                  'uuid', 'label_code')
+                  'uuid', 'label_code', 'created', 'modified_by', 'created_by', 'modified')
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
@@ -68,7 +68,8 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
                   'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
-                  'visitor_id', 'vehicle', 'restricted_items', 'label_code')
+                  'visitor_id', 'vehicle', 'restricted_items', 'label_code', 'created', 'modified_by', 'created_by',
+                  'modified')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
