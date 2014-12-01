@@ -1,0 +1,7 @@
+{
+  "name": "viLogged",
+  "engine": "sqlserver_ado",
+  "host": "musa\\SQLEXPRESS",
+  "user": "",
+  "password": ""
+}
