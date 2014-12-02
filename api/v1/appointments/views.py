@@ -16,6 +16,16 @@ def filter_from_url(query_params):
     is_approved = query_params.get('is_approved', None)
     is_expired = query_params.get('is_expired', None)
     label_code = query_params.get('label_code', None)
+    host_id = query_params.get('host_id', None)
+    visitor_id = query_params.get('visitor_id', None)
+
+    def str_to_bool(s):
+        if s == 'True' or s == 'true':
+            return True
+        elif s == 'False' or s == 'false':
+            return False
+        else:
+            raise ValueError
 
     if uuid is not None:
         queryset = queryset.filter(uuid=uuid)
@@ -24,11 +34,16 @@ def filter_from_url(query_params):
     if host_id__id is not None:
         queryset = queryset.filter(host_id__id=host_id__id)
     if is_approved is not None:
-        queryset = queryset.filter(is_approved=is_approved)
+        queryset = queryset.filter(is_approved=str_to_bool(is_approved))
     if is_expired is not None:
-        queryset = queryset.filter(is_expired=is_expired)
+        queryset = queryset.filter(is_expired=str_to_bool(is_expired))
     if label_code is not None:
         queryset = queryset.filter(label_code=label_code)
+    if host_id is not None:
+        queryset = queryset.filter(host_id=host_id)
+    if visitor_id is not None:
+        queryset = queryset.filter(visitor_id=visitor_id)
+
     return queryset
 
 
@@ -39,7 +54,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
                   'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
-                  'uuid', 'label_code')
+                  'uuid', 'label_code', 'created', 'modified_by', 'created_by', 'modified')
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
@@ -53,7 +68,8 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
                   'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
-                  'visitor_id', 'vehicle', 'restricted_items', 'label_code')
+                  'visitor_id', 'vehicle', 'restricted_items', 'label_code', 'created', 'modified_by', 'created_by',
+                  'modified')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -98,8 +114,6 @@ class AppointmentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
     serializer_class = AppointmentSerializer
     #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
-    filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required', 'label_code'
-                     'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id')
 
     def get_queryset(self):
 

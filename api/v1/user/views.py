@@ -12,8 +12,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id')
-        filter_fields = ('phone', 'home_phone', 'work_phone',)
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
 class UserProfileNestedSerializer(serializers.ModelSerializer):
@@ -22,8 +22,8 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         serializer_class = UserProfileSerializer
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id')
-        filter_fields = ('phone', 'home_phone', 'work_phone',)
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
 class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -159,6 +159,42 @@ class UserNestedList(generics.ListAPIView, mixins.CreateModelMixin):
         return self.create(request, *args, **kwargs)
 
 
+class UserProfileImportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
+
+
+class UserImportSerializer(serializers.ModelSerializer):
+    user_profile = UserProfileImportSerializer(many=False)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
+                  'is_superuser', 'user_profile')
+        filter_fields = ('username', 'email',)
+        write_only_fields = ('password',)
+
+    def restore_object(self, attrs, instance=None):
+        # call set_password on user object. Without this
+        # the password will be stored in plain text.
+        user = super(UserImportSerializer, self).restore_object(attrs, instance)
+
+        user.set_password(attrs['password'])
+        return user
+
+
+class UserImport(generics.ListAPIView, mixins.CreateModelMixin):
+    model = User
+    serializer_class = UserImportSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                  generics.GenericAPIView, mixins.CreateModelMixin):
     model = User
@@ -185,6 +221,7 @@ class UserDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
                 phone=user_profile['phone'],
                 work_phone=user_profile['work_phone'],
                 home_phone=user_profile['home_phone'],
+                gender=user_profile['gender'],
                 department=department,
                 user_id=user_id
             ).save()

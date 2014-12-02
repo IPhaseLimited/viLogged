@@ -24,7 +24,7 @@ class VisitorSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
                   'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'created',
-                  'modified', 'modified_by', 'created_by',)
+                  'modified', 'modified_by', 'created_by', 'gender')
         lookup_field = 'uuid',
 
 
@@ -36,7 +36,7 @@ class VisitorNestedSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
                   'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'current_location',
-                  'created', 'modified', 'modified_by', 'created_by')
+                  'created', 'modified', 'modified_by', 'created_by', 'gender')
         lookup_field = 'uuid'
 
 
@@ -80,7 +80,7 @@ class VisitorsList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateM
     model = Visitors
     serializer_class = VisitorSerializer
     filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code', 'fingerprint', 'date_of_birth',
-                     'created', 'modified', 'modified_by', 'created_by', 'group_type')
+                     'created', 'modified', 'modified_by', 'created_by', 'group_type', 'gender')
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
@@ -96,7 +96,7 @@ class VisitorsNestedList(generics.ListAPIView, mixins.CreateModelMixin, mixins.U
     serializer_class = VisitorNestedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     filter_fields = ('visitors_email', 'visitors_phone', 'visitors_pass_code', 'group_type', 'fingerprint',
-                     'date_of_birth', 'created', 'modified', 'modified_by', 'created_by',)
+                     'date_of_birth', 'created', 'modified', 'modified_by', 'created_by', 'gender')
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

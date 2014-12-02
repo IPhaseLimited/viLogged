@@ -8,7 +8,8 @@ class RestrictedItemsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RestrictedItems
-        fields = ('item_type', 'item_name', 'item_code', 'appointment_id', 'uuid')
+        fields = ('item_type', 'item_name', 'item_code', 'appointment_id', 'uuid', 'created', 'modified_by',
+                  'created_by', 'modified')
         lookup_field = 'uuid'
 
 
@@ -17,7 +18,8 @@ class VehicleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vehicle
-        fields = ('appointments_id', 'license', 'model', 'vehicle_type', 'color', 'uuid')
+        fields = ('appointments_id', 'license', 'model', 'vehicle_type', 'color', 'uuid', 'created', 'modified_by',
+                  'created_by', 'modified')
         lookup_field = 'uuid'
 
 
@@ -25,7 +27,7 @@ class CompanyDepartmentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompanyDepartments
-        fields = ('department_name', 'description', 'uuid')
+        fields = ('department_name', 'description', 'uuid', 'created', 'modified_by', 'created_by', 'modified')
         lookup_field = 'uuid'
 
 
@@ -33,5 +35,5 @@ class CompanyEntranceNamesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompanyEntranceNames
-        fields = ('entrance_name', 'uuid')
+        fields = ('entrance_name', 'uuid', 'created', 'modified_by', 'created_by', 'modified')
         lookup_field = 'uuid'
