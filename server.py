@@ -20,24 +20,22 @@ class ViLoggedAPIServer(win32serviceutil.ServiceFramework):
         self.stop_event = win32event.CreateEvent(None, 0, 0, None)
 
     def SvcDoRun(self):
-        cherrypy.tree.mount(application(), '/')
+        cherrypy.tree.graft(application, "/")
+        # Unsubscribe the default server
+        cherrypy.server.unsubscribe()
+        # Instantiate a new server object
+        server = cherrypy._cpserver.Server()
 
-        # in practice, you will want to specify a value for
-        # log.error_file below or in your config file.  If you
-        # use a config file, be sure to use an absolute path to
-        # it, as you can't be assured what path your service
-        # will run in.
-        cherrypy.config.update({
-            'global':{
-                'engine.autoreload.on': False,
-                'log.screen': False,
-                'engine.SIGHUP': None,
-                'engine.SIGTERM': None
-                }
-            })
-        # set blocking=False so that start() does not block
-        cherrypy.server.quickstart()
-        cherrypy.engine.start(blocking=False)
+        # Configure the server object
+        server.socket_host = "0.0.0.0"
+        server.socket_port = 8000
+        server.thread_pool = 30
+        # Subscribe this server
+        server.subscribe()
+        # Start the server engine (Option 1 *and* 2)
+        cherrypy.engine.start()
+        cherrypy.engine.block()
+
         # now, block until our event is set...
         win32event.WaitForSingleObject(self.stop_event, win32event.INFINITE)
 
