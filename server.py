@@ -10,8 +10,8 @@ import win32service
 class ViLoggedAPIServer(win32serviceutil.ServiceFramework):
     """NT Service."""
 
-    _svc_name_ = "CherryPyService"
-    _svc_display_name_ = "CherryPy Service"
+    _svc_name_ = "viLoggedAPI"
+    _svc_display_name_ = "viLogged API"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
