@@ -24,6 +24,14 @@ def filter_from_url(query_params):
             return True
         elif s == 'False' or s == 'false':
             return False
+
+
+    def str_to_bool2(s):
+
+        if s == 'True' or s == 'true' or s == '1':
+            return 1
+        elif s == 'False' or s == 'false' or s == '0':
+            return 0
         else:
             raise ValueError
 
@@ -34,7 +42,7 @@ def filter_from_url(query_params):
     if host_id__id is not None:
         queryset = queryset.filter(host_id__id=host_id__id)
     if is_approved is not None:
-        queryset = queryset.filter(is_approved=str_to_bool(is_approved))
+        queryset = queryset.filter(is_approved=str_to_bool2(is_approved))
     if is_expired is not None:
         queryset = queryset.filter(is_expired=str_to_bool(is_expired))
     if label_code is not None:
