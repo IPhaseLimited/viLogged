@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from api.v1.user.views import UserList, GetUserByToken, UserNestedList
-from api.v1.visitors.views import VisitorsNestedList, VisitorsLocationDetail, VisitorsLocationList, \
-    VisitorsGroupDetail, VisitorsGroupList
+from api.v1.visitors.views import VisitorsNestedList, VisitorsLocationDetail, VisitorsLocationList, VisitorsGroupDetail, VisitorsGroupList
 from api.v1.appointments.views import AppointmentNestedList
 from api.v1.core.views import *
 
