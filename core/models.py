@@ -70,7 +70,7 @@ class VisitorGroup(HistoryFieldsMixin):
 class Visitors(HistoryFieldsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    visitors_email = models.EmailField(max_length=50, unique=True)
+    visitors_email = models.EmailField(max_length=50, blank=True, null=True)
     gender = models.CharField(max_length=10, default='Male')
     visitors_phone = models.CharField(max_length=20, unique=True, verbose_name='visitors phone number')
     occupation = models.CharField(max_length=50, blank=True, null=True)
@@ -85,7 +85,7 @@ class Visitors(HistoryFieldsMixin):
     scanned_signature = models.TextField(max_length=100, blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
-    group_type = models.IntegerField(blank=True, null=True)
+    group_type = models.ForeignKey(VisitorGroup, to_field='uuid', related_name='group', null=True, blank=True)
 
     class Meta:
         app_label = 'core'

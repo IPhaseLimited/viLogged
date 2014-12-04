@@ -5,6 +5,50 @@ from api.permissions import *
 from api.serializer import *
 
 
+class VisitorsGroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VisitorGroup
+        fields = ('group_name', 'black_listed', 'uuid', 'created', 'modified', 'modified_by', 'created_by')
+        lookup_field = 'uuid'
+        filter_fields = ('group_name', 'black_listed', 'uuid',)
+
+
+class VisitorsGroupDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                          generics.GenericAPIView, mixins.CreateModelMixin):
+
+    model = VisitorGroup
+    serializer_class = VisitorsGroupSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    lookup_field = 'uuid'
+    filter_fields = ('group_name', 'black_listed', 'uuid',)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class VisitorsGroupList(generics.ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin,):
+    model = VisitorGroup
+    serializer_class = VisitorsGroupSerializer
+    filter_fields = ('group_name', 'black_listed', 'uuid',)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
 class VisitorsLocationSerializer(serializers.ModelSerializer):
     visitor_id = UUIDRelatedField(many=False)
 
@@ -17,7 +61,7 @@ class VisitorsLocationSerializer(serializers.ModelSerializer):
 
 
 class VisitorSerializer(serializers.ModelSerializer):
-    group_id = UUIDRelatedField()
+    group_type = UUIDRelatedField()
 
     class Meta:
         model = Visitors
@@ -30,7 +74,7 @@ class VisitorSerializer(serializers.ModelSerializer):
 
 class VisitorNestedSerializer(serializers.ModelSerializer):
     current_location = VisitorsLocationSerializer(many=False)
-
+    group_type = VisitorsGroupSerializer(many=False)
     class Meta:
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
