@@ -113,7 +113,7 @@ class Appointments(HistoryFieldsMixin):
     visit_end_time = models.TimeField()
     host_id = models.ForeignKey(User, blank=True, null=True, related_name="host")
     escort_required = models.BooleanField(default=False)
-    is_approved = models.BooleanField(default=False)
+    is_approved = models.IntegerField(default=None, null=True, blank=True)
     is_expired = models.BooleanField(default=False)
     checked_in = models.DateTimeField(default=None, blank=True, null=True)
     checked_out = models.DateTimeField(blank=True, null=True)
