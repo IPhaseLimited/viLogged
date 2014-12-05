@@ -3,7 +3,7 @@ from core.models import Appointments, RestrictedItems, Vehicle, CompanyEntranceN
 from api.v1.core.serializers import CompanyEntranceNamesSerializer, VehicleSerializer, RestrictedItemsSerializer
 from api.permissions import *
 from api.serializer import *
-from api.v1.visitors.views import VisitorSerializer
+from api.v1.visitors.views import VisitorSerializer, VisitorNestedSerializer
 from api.v1.user.views import UserNestedSerializer, UserProfileNestedSerializer
 
 
@@ -66,7 +66,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
-    visitor_id = VisitorSerializer(many=False)
+    visitor_id = VisitorNestedSerializer(many=False)
     host_id = UserNestedSerializer(many=False)
     entrance_id = CompanyEntranceNamesSerializer(many=False)
     vehicle = VehicleSerializer(many=False)
