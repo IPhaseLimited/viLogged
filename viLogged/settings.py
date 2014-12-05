@@ -38,7 +38,7 @@ def loadConfig():
 
 db_settings = loadConfig()
 
-DATABASES['default']['name'] = db_settings.get('name', os.path.join(PROJECT_ROOT, 'db.sqlite'))
+DATABASES['default']['NAME'] = db_settings.get('name', os.path.join(PROJECT_ROOT, 'db.sqlite'))
 DATABASES['default']['ENGINE'] = db_settings.get('engine', 'django.db.backends.sqlite3')
 DATABASES['default']['HOST'] = db_settings.get('host', 'localhost')
 DATABASES['default']['USER'] = db_settings.get('user', '')
