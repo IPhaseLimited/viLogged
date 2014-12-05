@@ -26,6 +26,7 @@ DATABASES = {
             'PASSWORD': '',
         }
     }
+
 def loadConfig():
     file_name = os.path.join(PROJECT_ROOT, 'config.json')
     data = {}
@@ -42,6 +43,12 @@ DATABASES['default']['ENGINE'] = db_settings.get('engine', 'django.db.backends.s
 DATABASES['default']['HOST'] = db_settings.get('host', 'localhost')
 DATABASES['default']['USER'] = db_settings.get('user', '')
 DATABASES['default']['PASSWORD'] = db_settings.get('password', '')
+
+
+try:
+    from ldap_settings import *
+except ImportError:
+    pass
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['localhost']
