@@ -168,6 +168,41 @@ def loadConfig():
         return json.loads(data)
     return data
 
+class TestConnection(views.APIView):
+
+
+    def post(self, request):
+
+        ldap_settings = loadConfig()
+        server_name = ldap_settings.get('serverName', '192.168.1.100')
+        port = ldap_settings.get('port', 389)
+        admin_username = ldap_settings.get('adminUsername', 'administrator')
+        bind_password = ldap_settings('bindPassword', '')
+        domain_controller = ldap_settings.get('domainController', 'vms')
+        dn = domain_controller.split('.')
+        dc = ''
+        for ns in dn:
+            dc = + 'dc={}'.format(ns)
+
+        try:
+            # Open a connection
+            l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+            # Bind/authenticate with a user with apropriate rights to add objects
+            l.protocol_version = ldap.VERSION3
+            l.set_option(ldap.OPT_REFERRALS, 0)
+            bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
+            dn_password = admin_username
+            l.simple_bind_s(bind_dn, bind_password)
+
+            # The dn of our new entry/object
+            dn=dc
+
+            user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+dn_password+")",
+            attrlist=["sAMAccountName", "displayName","mail"])
+            return Response()
+        except:
+            return Response({'detail': 'Problem with ldap connection'})
+
 
 def ldap_login(username, password):
 
@@ -184,7 +219,7 @@ def ldap_login(username, password):
 
 
     # Open a connection
-    l = ldap.initialize("ldap://{0}:{1}".format())
+    l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
     # Bind/authenticate with a user with apropriate rights to add objects
     l.protocol_version = ldap.VERSION3
     l.set_option(ldap.OPT_REFERRALS, 0)
@@ -212,6 +247,56 @@ def ldap_login(username, password):
             return user_instance
     else:
         return None
+
+
+class ImportUsersFromLDAP(views.APIView):
+
+
+    def get(self, request):
+
+        ldap_settings = loadConfig()
+        server_name = ldap_settings.get('serverName', '192.168.1.100')
+        port = ldap_settings.get('port', 389)
+        admin_username = ldap_settings.get('adminUsername', 'administrator')
+        bind_password = ldap_settings('bindPassword', '')
+        domain_controller = ldap_settings.get('domainController', 'vms')
+        dn = domain_controller.split('.')
+        dc = ''
+        for ns in dn:
+            dc = + 'dc={}'.format(ns)
+
+        try:
+            # Open a connection
+            l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+            # Bind/authenticate with a user with apropriate rights to add objects
+            l.protocol_version = ldap.VERSION3
+            l.set_option(ldap.OPT_REFERRALS, 0)
+            bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
+            l.simple_bind_s(bind_dn, bind_password)
+
+            # The dn of our new entry/object
+            dn=dc
+
+            users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sn=*)",
+            attrlist=["sAMAccountName", "displayName","mail"])
+
+            for user in users:
+                cn, user = user[0]
+                try:
+                    u = User.objects.get(username=user['sAMAccountName'])
+
+                except User.DoesNotExist:
+                    fullname = user['displayName'].split(' ')
+                    user_instance = User.objects.get_or_create(username=user['sAMAccountName'], password='password@1', first_name=fullname[0],
+                                                           email=user['mail'], last_name=fullname[1], is_active=True)
+                    user_instance.save()
+
+                    return user_instance
+
+            return Response({'detail': ''})
+        except ldap.LDAPError, e:
+
+            return Response({'detail': e}, status.HTTP_400_BAD_REQUEST)
 
 
 class AuthUser(views.APIView):
