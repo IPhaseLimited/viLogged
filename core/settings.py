@@ -12,20 +12,20 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Musa Musa', 'musakunte@gmail.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
-        'default': {
-            'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
-            'ENGINE': 'django.db.backends.sqlite3',
-            'HOST': 'localhost',
-            'USER': '',
-            'PASSWORD': '',
-        }
+    'default': {
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'HOST': 'localhost',
+        'USER': '',
+        'PASSWORD': '',
     }
+}
 
 def loadConfig():
     file_name = os.path.join(PROJECT_ROOT, 'config.json')
@@ -45,10 +45,6 @@ DATABASES['default']['USER'] = db_settings.get('user', '')
 DATABASES['default']['PASSWORD'] = db_settings.get('password', '')
 
 
-try:
-    from ldap_settings import *
-except ImportError:
-    pass
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['localhost']
@@ -78,8 +74,54 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, "media")
-MEDIA_URL = '/media/'
+
+# List of finder classes that know how to find static files in
+# various locations.
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '%2=)0ug0*=wyr5v6v=%_trw!sjy60x98*$#%%0o26ut%m!5h0)'
+
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
+)
+
+MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.DisableCSRF',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+ROOT_URLCONF = 'core.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'core.wsgi.application'
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken',
+    'djoser',
+    'django_extensions',
+    'core',
+    'django.contrib.admin',
+    'django.contrib.staticfiles',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
+)
+
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 
@@ -98,58 +140,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '%2=)0ug0*=wyr5v6v=%_trw!sjy60x98*$#%%0o26ut%m!5h0)'
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
-
-MIDDLEWARE_CLASSES = (
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
-
-ROOT_URLCONF = 'viLogged.urls'
-
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'viLogged.wsgi.application'
-
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
-
-INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'django_filters',
-    'rest_framework.authtoken',
-    'djoser',
-    'django_extensions',
-    'core',
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
-)
-
 
 FIXTURE_DIRS = (
     os.path.join(PROJECT_ROOT, "core/fixtures"),

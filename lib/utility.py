@@ -1,4 +1,3 @@
-from viLogged import settings
 from django.core.mail import send_mail
 import urllib
 import urllib2

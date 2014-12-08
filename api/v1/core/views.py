@@ -1,4 +1,7 @@
 from rest_framework import generics, status, views, mixins
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework.response import Response
 from lib.utility import Utility
 from core.models import MessageQueue, RestrictedItems, Vehicle, CompanyDepartments, CompanyEntranceNames
@@ -146,3 +149,92 @@ class CompanyEntranceNamesDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMi
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+from django.contrib.auth import authenticate, login
+from rest_framework.authtoken.models import Token
+import ldap
+import os
+import json
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def loadConfig():
+    file_name = os.path.join(PROJECT_ROOT, 'ldap.json')
+    data = {}
+    if os.path.isfile(file_name):
+        file = open(file_name)
+        data = file.read()
+        return json.loads(data)
+    return data
+
+
+def ldap_login(username, password):
+
+    ldap_settings = loadConfig()
+    server_name = ldap_settings.get('serverName', '192.168.1.100')
+    port = ldap_settings.get('port', 389)
+    admin_username = ldap_settings.get('adminUsername', 'administrator')
+    bind_password = ldap_settings('bindPassword', '')
+    domain_controller = ldap_settings.get('domainController', 'vms')
+    dn = domain_controller.split('.')
+    dc = ''
+    for ns in dn:
+        dc =+ 'dc={}'.format(ns)
+
+
+    # Open a connection
+    l = ldap.initialize("ldap://{0}:{1}".format())
+    # Bind/authenticate with a user with apropriate rights to add objects
+    l.protocol_version = ldap.VERSION3
+    l.set_option(ldap.OPT_REFERRALS, 0)
+    bind_dn  = "{0}\\{1}".format(dn[0], username)
+    dn_password = password
+    l.simple_bind_s(bind_dn, password)
+
+    # The dn of our new entry/object
+    dn=dc
+
+    user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
+    attrlist=["sAMAccountName", "displayName","mail"])
+
+    if len(user) > 0:
+        cn, user = user[0]
+        try:
+            u = User.objects.get(username=username)
+            return u
+        except User.DoesNotExist:
+            fullname = user['displayName'][0].split(' ')
+            user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
+                                                   email=user['mail'][0], last_name=fullname[1], is_active=True)
+            user_instance.save()
+
+            return user_instance
+    else:
+        return None
+
+
+class AuthUser(views.APIView):
+
+    def post(self, request):
+
+        username = request.DATA.get('username', None)
+        password = request.DATA.get('password', None)
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                token = Token.objects.get(user=user)
+                return Response({'token': token.key})
+            else:
+                return Response({'detail': 'User not active'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            ldap_user = ldap_login(username, password)
+            if ldap_user is not None:
+                token = Token.objects.get(user=ldap_user)
+                return Response({'token': token.key})
+
+            return Response({'detail': 'invalid credentials provided'}, status=status.HTTP_400_BAD_REQUEST)
+            # Return an 'invalid login' error message.
+
+        #return Response({'error_message': '',DATA 'message': request.DATA})
