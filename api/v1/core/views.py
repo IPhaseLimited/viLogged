@@ -180,9 +180,11 @@ class TestConnection(views.APIView):
         bind_password = ldap_settings.get('bindPassword', '')
         domain_controller = ldap_settings.get('domainController', 'ncc.local')
         dn = domain_controller.split('.')
-        dc = ''
+        dc = []
         for ns in dn:
-            dc += 'dc={}'.format(ns)
+            dc.append('dc={}'.format(ns))
+
+        dn = ','.join(dc)
 
         try:
             # Open a connection
@@ -213,44 +215,39 @@ def ldap_login(username, password):
     bind_password = ldap_settings.get('bindPassword', '')
     domain_controller = ldap_settings.get('domainController', 'ncc.local')
     dn = domain_controller.split('.')
-    dc = ''
+    dc = []
     for ns in dn:
-        dc += 'dc={}'.format(ns)
+        dc.append('dc={}'.format(ns))
 
-    try:
-        # Open a connection
-        l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+    dn = ','.join(dc)
+
+    l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
         # Bind/authenticate with a user with apropriate rights to add objects
-        l.protocol_version = ldap.VERSION3
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        bind_dn  = "{0}\\{1}".format(dn[0], username)
-        dn_password = password
-        l.simple_bind_s(bind_dn, password)
+    l.protocol_version = ldap.VERSION3
+    l.set_option(ldap.OPT_REFERRALS, 0)
+    bind_dn  = "{0}\\{1}".format(dn[0], username)
+    dn_password = password
+    l.simple_bind_s(bind_dn, password)
 
-        # The dn of our new entry/object
-        dn=dc
+    # The dn of our new entry/object
 
-        user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-        attrlist=["sAMAccountName", "displayName","mail"])
 
-        if len(user) > 0:
-            cn, user = user[0]
-            try:
-                u = User.objects.get(username=username)
-                return u
-            except User.DoesNotExist:
-                fullname = user['displayName'][0].split(' ')
-                fakemail = fullname.join('.')
-                fakemail = '{}@ncc.org'.format(fakemail.lower())
-                email = fakemail
-                user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
-                                                           last_name=fullname[1], is_active=True)
-                user_instance.save()
+    user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
+    attrlist=["sAMAccountName", "displayName","mail"])
 
-                return user_instance
-        else:
-            return None
-    except:
+    if len(user) > 0:
+        cn, user = user[0]
+        try:
+            u = User.objects.get(username=username)
+            return u
+        except User.DoesNotExist:
+            fullname = user['displayName'][0].split(' ')
+            user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
+                                                       last_name=fullname[1], is_active=True)
+            user_instance.save()
+
+            return user_instance
+    else:
         return None
 
 
@@ -267,8 +264,11 @@ class ImportUsersFromLDAP(views.APIView):
         domain_controller = ldap_settings.get('domainController', 'vms')
         dn = domain_controller.split('.')
         dc = ''
+        dc = []
         for ns in dn:
-            dc += 'dc={}'.format(ns)
+            dc.append('dc={}'.format(ns))
+
+        dn = ','.join(dc)
 
         try:
             # Open a connection
@@ -280,7 +280,7 @@ class ImportUsersFromLDAP(views.APIView):
             l.simple_bind_s(bind_dn, bind_password)
 
             # The dn of our new entry/object
-            dn=dc
+
 
             users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sn=*)",
             attrlist=["sAMAccountName", "displayName","mail"])
