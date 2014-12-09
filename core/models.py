@@ -32,8 +32,7 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=20, unique=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)
-    department = models.ForeignKey(CompanyDepartments, to_field='uuid', blank=True, null=True,
-                                   related_name='company_name')
+    department = models.CharField(max_length=50, blank=True, null=True)
     designation = models.CharField(max_length=50, blank=True, null=True)
     image = models.TextField(blank=True, null=True)
 
