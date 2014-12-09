@@ -193,13 +193,12 @@ class TestConnection(views.APIView):
             l.protocol_version = ldap.VERSION3
             l.set_option(ldap.OPT_REFERRALS, 0)
             bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
-            dn_password = admin_username
             l.simple_bind_s(bind_dn, bind_password)
 
             # The dn of our new entry/object
             dn=dc
 
-            user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+dn_password+")",
+            user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
             attrlist=["sAMAccountName", "displayName","mail"])
             return Response()
         except:
@@ -211,8 +210,6 @@ def ldap_login(username, password):
     ldap_settings = loadConfig()
     server_name = ldap_settings.get('serverName', '172.16.0.21')
     port = ldap_settings.get('port', 389)
-    admin_username = ldap_settings.get('adminUsername', 'administrator')
-    bind_password = ldap_settings.get('bindPassword', '')
     domain_controller = ldap_settings.get('domainController', 'ncc.local')
     dn = domain_controller.split('.')
     dc = []
@@ -225,7 +222,7 @@ def ldap_login(username, password):
         # Bind/authenticate with a user with apropriate rights to add objects
     l.protocol_version = ldap.VERSION3
     l.set_option(ldap.OPT_REFERRALS, 0)
-    bind_dn  = "{0}\\{1}".format(dn[0], username)
+    bind_dn  = "ncc\\{0}".format(username)
     dn_password = password
     l.simple_bind_s(bind_dn, password)
 
@@ -242,13 +239,22 @@ def ldap_login(username, password):
             return u
         except User.DoesNotExist:
             fullname = user['displayName'][0].split(' ')
-            user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
-                                                       last_name=fullname[1], is_active=True)
-            user_instance.save()
+            first_name = fullname[0]
+            last_name = 'None'
+            if len(fullname) > 1:
+                last_name = fullname[1]
+            user_instance = User.objects.get_or_create(username=username, password=password, first_name=first_name,
+                                                       last_name=last_name, is_active=True)
 
             return user_instance
     else:
         return None
+
+
+def get_or_create_user(user_object):
+    pass
+
+
 
 
 class ImportUsersFromLDAP(views.APIView):
@@ -263,7 +269,6 @@ class ImportUsersFromLDAP(views.APIView):
         bind_password = ldap_settings.get('bindPassword', '')
         domain_controller = ldap_settings.get('domainController', 'vms')
         dn = domain_controller.split('.')
-        dc = ''
         dc = []
         for ns in dn:
             dc.append('dc={}'.format(ns))
