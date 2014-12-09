@@ -156,7 +156,7 @@ from rest_framework.authtoken.models import Token
 import ldap
 import os
 import json
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from core.settings import PROJECT_ROOT
 
 
 def loadConfig():
@@ -174,11 +174,11 @@ class TestConnection(views.APIView):
     def post(self, request):
 
         ldap_settings = loadConfig()
-        server_name = ldap_settings.get('serverName', '192.168.1.100')
+        server_name = ldap_settings.get('serverName', '172.16.0.21')
         port = ldap_settings.get('port', 389)
         admin_username = ldap_settings.get('adminUsername', 'administrator')
         bind_password = ldap_settings.get('bindPassword', '')
-        domain_controller = ldap_settings.get('domainController', 'vms')
+        domain_controller = ldap_settings.get('domainController', 'ncc.local')
         dn = domain_controller.split('.')
         dc = ''
         for ns in dn:
@@ -207,45 +207,50 @@ class TestConnection(views.APIView):
 def ldap_login(username, password):
 
     ldap_settings = loadConfig()
-    server_name = ldap_settings.get('serverName', '192.168.1.100')
+    server_name = ldap_settings.get('serverName', '172.16.0.21')
     port = ldap_settings.get('port', 389)
     admin_username = ldap_settings.get('adminUsername', 'administrator')
     bind_password = ldap_settings.get('bindPassword', '')
-    domain_controller = ldap_settings.get('domainController', 'vms')
+    domain_controller = ldap_settings.get('domainController', 'ncc.local')
     dn = domain_controller.split('.')
     dc = ''
     for ns in dn:
         dc += 'dc={}'.format(ns)
 
+    try:
+        # Open a connection
+        l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+        # Bind/authenticate with a user with apropriate rights to add objects
+        l.protocol_version = ldap.VERSION3
+        l.set_option(ldap.OPT_REFERRALS, 0)
+        bind_dn  = "{0}\\{1}".format(dn[0], username)
+        dn_password = password
+        l.simple_bind_s(bind_dn, password)
 
-    # Open a connection
-    l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
-    # Bind/authenticate with a user with apropriate rights to add objects
-    l.protocol_version = ldap.VERSION3
-    l.set_option(ldap.OPT_REFERRALS, 0)
-    bind_dn  = "{0}\\{1}".format(dn[0], username)
-    dn_password = password
-    l.simple_bind_s(bind_dn, password)
+        # The dn of our new entry/object
+        dn=dc
 
-    # The dn of our new entry/object
-    dn=dc
+        user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
+        attrlist=["sAMAccountName", "displayName","mail"])
 
-    user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-    attrlist=["sAMAccountName", "displayName","mail"])
+        if len(user) > 0:
+            cn, user = user[0]
+            try:
+                u = User.objects.get(username=username)
+                return u
+            except User.DoesNotExist:
+                fullname = user['displayName'][0].split(' ')
+                fakemail = fullname.join('.')
+                fakemail = '{}@ncc.org'.format(fakemail.lower())
+                email = user.get('mail', [fakemail])
+                user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
+                                                       email=email[0], last_name=fullname[1], is_active=True)
+                user_instance.save()
 
-    if len(user) > 0:
-        cn, user = user[0]
-        try:
-            u = User.objects.get(username=username)
-            return u
-        except User.DoesNotExist:
-            fullname = user['displayName'][0].split(' ')
-            user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
-                                                   email=user['mail'][0], last_name=fullname[1], is_active=True)
-            user_instance.save()
-
-            return user_instance
-    else:
+                return user_instance
+        else:
+            return None
+    except:
         return None
 
 
