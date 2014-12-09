@@ -244,7 +244,7 @@ def ldap_login(username, password):
                 fakemail = '{}@ncc.org'.format(fakemail.lower())
                 email = fakemail
                 user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
-                                                       email=email, last_name=fullname[1], is_active=True)
+                                                           last_name=fullname[1], is_active=True)
                 user_instance.save()
 
                 return user_instance
