@@ -1,6 +1,6 @@
 import sys
 sys.path.append(sys.path[0])
-from viLogged.wsgi import application
+from core.wsgi import application
 import cherrypy
 import json
 import win32serviceutil

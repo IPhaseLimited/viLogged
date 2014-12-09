@@ -31,6 +31,4 @@ urlpatterns = patterns('',
     url(r'^visitors-location/(?P<uuid>\w+)/?$', VisitorsLocationDetail.as_view()),
     url(r'^user/?', include('api.v1.user.url')),
 
-
-
 )
