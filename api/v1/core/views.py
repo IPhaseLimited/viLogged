@@ -182,7 +182,7 @@ class TestConnection(views.APIView):
         dn = domain_controller.split('.')
         dc = ''
         for ns in dn:
-            dc = + 'dc={}'.format(ns)
+            dc += 'dc={}'.format(ns)
 
         try:
             # Open a connection
@@ -215,7 +215,7 @@ def ldap_login(username, password):
     dn = domain_controller.split('.')
     dc = ''
     for ns in dn:
-        dc =+ 'dc={}'.format(ns)
+        dc += 'dc={}'.format(ns)
 
 
     # Open a connection
@@ -263,7 +263,7 @@ class ImportUsersFromLDAP(views.APIView):
         dn = domain_controller.split('.')
         dc = ''
         for ns in dn:
-            dc = + 'dc={}'.format(ns)
+            dc += 'dc={}'.format(ns)
 
         try:
             # Open a connection
