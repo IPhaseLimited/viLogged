@@ -177,7 +177,7 @@ class TestConnection(views.APIView):
         server_name = ldap_settings.get('serverName', '192.168.1.100')
         port = ldap_settings.get('port', 389)
         admin_username = ldap_settings.get('adminUsername', 'administrator')
-        bind_password = ldap_settings('bindPassword', '')
+        bind_password = ldap_settings.get('bindPassword', '')
         domain_controller = ldap_settings.get('domainController', 'vms')
         dn = domain_controller.split('.')
         dc = ''
@@ -210,7 +210,7 @@ def ldap_login(username, password):
     server_name = ldap_settings.get('serverName', '192.168.1.100')
     port = ldap_settings.get('port', 389)
     admin_username = ldap_settings.get('adminUsername', 'administrator')
-    bind_password = ldap_settings('bindPassword', '')
+    bind_password = ldap_settings.get('bindPassword', '')
     domain_controller = ldap_settings.get('domainController', 'vms')
     dn = domain_controller.split('.')
     dc = ''
@@ -258,7 +258,7 @@ class ImportUsersFromLDAP(views.APIView):
         server_name = ldap_settings.get('serverName', '192.168.1.100')
         port = ldap_settings.get('port', 389)
         admin_username = ldap_settings.get('adminUsername', 'administrator')
-        bind_password = ldap_settings('bindPassword', '')
+        bind_password = ldap_settings.get('bindPassword', '')
         domain_controller = ldap_settings.get('domainController', 'vms')
         dn = domain_controller.split('.')
         dc = ''
