@@ -168,7 +168,7 @@ def loadConfig():
 
 def get_or_create_user(user, username=None, password=None):
     import time
-    ts = time.time().split('.')
+    ts = '{}'.format(time.time()).split('.')
 
     if len(user) > 0:
         cn, user = user[0]
