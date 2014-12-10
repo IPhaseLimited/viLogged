@@ -189,6 +189,7 @@ def get_or_create_user(user, username=None, password=None):
             phone = user.get('telephoneNumber', None)
             department_info = user.get('distinguishedName', None)
 
+
             if len(fullname) > 1:
                 last_name = fullname[1]
 
@@ -218,14 +219,12 @@ def get_or_create_user(user, username=None, password=None):
                 is_active=True
             )
 
-            try:
-                UserProfile(
-                    user_id=user_instance,
-                    phone=phone,
-                    department=department_info
-                ).save()
-            except:
-                pass
+            UserProfile(
+                user_id=User.objects.get(username=username),
+                phone=phone,
+                department=department_info
+            ).save()
+
             return user_instance
     else:
         return None
