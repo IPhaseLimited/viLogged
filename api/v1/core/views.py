@@ -1,10 +1,8 @@
 from rest_framework import generics, status, views, mixins
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-
 from rest_framework.response import Response
 from lib.utility import Utility
-from core.models import MessageQueue, RestrictedItems, Vehicle, CompanyDepartments, CompanyEntranceNames
+from core.models import MessageQueue, RestrictedItems, Vehicle, CompanyDepartments, CompanyEntranceNames, UserProfile
 from api.permissions import *
 from api.v1.core.serializers import CompanyDepartmentsSerializer, VehicleSerializer, CompanyEntranceNamesSerializer,\
     RestrictedItemsSerializer
