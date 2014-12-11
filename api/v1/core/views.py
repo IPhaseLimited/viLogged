@@ -1,10 +1,8 @@
 from rest_framework import generics, status, views, mixins
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-
 from rest_framework.response import Response
 from lib.utility import Utility
-from core.models import MessageQueue, RestrictedItems, Vehicle, CompanyDepartments, CompanyEntranceNames
+from core.models import MessageQueue, RestrictedItems, Vehicle, CompanyDepartments, CompanyEntranceNames, UserProfile
 from api.permissions import *
 from api.v1.core.serializers import CompanyDepartmentsSerializer, VehicleSerializer, CompanyEntranceNamesSerializer,\
     RestrictedItemsSerializer
@@ -158,7 +156,6 @@ import os
 import json
 from core.settings import PROJECT_ROOT
 
-
 def loadConfig():
     file_name = os.path.join(PROJECT_ROOT, 'ldap.json')
     data = {}
@@ -168,12 +165,146 @@ def loadConfig():
         return json.loads(data)
     return data
 
-class TestConnection(views.APIView):
 
+def get_or_create_user(user, username=None, password=None):
+    import time
+    ts = '{}'.format(time.time()).split('.')
+
+    if len(user) > 0:
+        cn, user = user[0]
+        if username is None:
+            username = user.get('sAMAccountName', None)
+        if password is None:
+            password = 'password@1'
+
+        try:
+            u = User.objects.get(username=username)
+            return u
+        except User.DoesNotExist:
+
+            fullname = user['displayName'][0].split(' ')
+            first_name = fullname[0]
+            last_name = 'None'
+            user_email = user.get('mail', None)
+            phone = user.get('telephoneNumber', None)
+            department_info = user.get('distinguishedName', None)
+
+
+            if len(fullname) > 1:
+                last_name = fullname[1]
+
+            if phone is not None:
+                phone = phone[0]
+            else:
+                phone = ts[0]
+
+            if user_email is not None:
+                user_email = user_email[0]
+            else:
+                user_email = 'mail{0}@ncc.org'.format(ts[0])
+
+            if department_info is not None:
+                department_info = department_info[0].split(',')
+                department_info = department_info[1].split('=')
+                department_info = department_info[1]
+            else:
+                department_info = 'None'
+
+            user_instance = User.objects.get_or_create(
+                username=username,
+                password=password,
+                email=user_email,
+                first_name=first_name,
+                last_name=last_name,
+                is_active=True
+            )
+
+            UserProfile(
+                user_id=User.objects.get(username=username),
+                phone=phone,
+                department=department_info
+            ).save()
+
+            return user_instance
+    else:
+        return None
+
+
+def ldap_login(username, password):
+
+    ldap_settings = loadConfig()
+    server_name = ldap_settings.get('serverName', '172.16.0.21')
+    port = ldap_settings.get('port', 389)
+    domain_controller = ldap_settings.get('domainController', 'ncc.local')
+    dn = domain_controller.split('.')
+    dc = []
+    for ns in dn:
+        dc.append('dc={}'.format(ns))
+
+    dn = ','.join(dc)
+
+    l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+        # Bind/authenticate with a user with apropriate rights to add objects
+    l.protocol_version = ldap.VERSION3
+    l.set_option(ldap.OPT_REFERRALS, 0)
+    bind_dn  = "ncc\\{0}".format(username)
+    dn_password = password
+    l.simple_bind_s(bind_dn, password)
+
+    # The dn of our new entry/object
+
+    user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
+                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+
+    return get_or_create_user(user, username, password)
+
+
+class ImportUsersFromLDAP(views.APIView):
+
+    def get(self, request):
+
+        ldap_settings = loadConfig()
+        server_name = ldap_settings.get('serverName', '192.168.1.100')
+        port = ldap_settings.get('port', 389)
+        admin_username = ldap_settings.get('adminUsername', 'administrator')
+        bind_password = ldap_settings.get('bindPassword', '')
+        domain_controller = ldap_settings.get('domainController', 'vms')
+        dn = domain_controller.split('.')
+        dc = []
+        for ns in dn:
+            dc.append('dc={}'.format(ns))
+
+        dn = ','.join(dc)
+
+        try:
+            # Open a connection
+            l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
+            # Bind/authenticate with a user with apropriate rights to add objects
+            l.protocol_version = ldap.VERSION3
+            l.set_option(ldap.OPT_REFERRALS, 0)
+            bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
+            l.simple_bind_s(bind_dn, bind_password)
+
+            # The dn of our new entry/object
+
+
+            users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(telephoneNumber=*)",
+                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+
+            for cn, user in users:
+                get_or_create_user(user)
+
+            return Response({'detail': ''})
+        except ldap.LDAPError, e:
+
+            return Response({'detail': e}, status.HTTP_400_BAD_REQUEST)
+
+
+class TestConnection(views.APIView):
 
     def post(self, request):
 
-        ldap_settings = loadConfig()
+        ldap_settings = request.DATA
         server_name = ldap_settings.get('serverName', '172.16.0.21')
         port = ldap_settings.get('port', 389)
         admin_username = ldap_settings.get('adminUsername', 'administrator')
@@ -192,116 +323,17 @@ class TestConnection(views.APIView):
             # Bind/authenticate with a user with apropriate rights to add objects
             l.protocol_version = ldap.VERSION3
             l.set_option(ldap.OPT_REFERRALS, 0)
-            bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
-            dn_password = admin_username
+            bind_dn  = "ncc\\{0}".format(admin_username)
             l.simple_bind_s(bind_dn, bind_password)
 
             # The dn of our new entry/object
             dn=dc
 
-            user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+dn_password+")",
+            user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
             attrlist=["sAMAccountName", "displayName","mail"])
             return Response()
         except:
             return Response({'detail': 'Problem with ldap connection'})
-
-
-def ldap_login(username, password):
-
-    ldap_settings = loadConfig()
-    server_name = ldap_settings.get('serverName', '172.16.0.21')
-    port = ldap_settings.get('port', 389)
-    admin_username = ldap_settings.get('adminUsername', 'administrator')
-    bind_password = ldap_settings.get('bindPassword', '')
-    domain_controller = ldap_settings.get('domainController', 'ncc.local')
-    dn = domain_controller.split('.')
-    dc = []
-    for ns in dn:
-        dc.append('dc={}'.format(ns))
-
-    dn = ','.join(dc)
-
-    l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
-        # Bind/authenticate with a user with apropriate rights to add objects
-    l.protocol_version = ldap.VERSION3
-    l.set_option(ldap.OPT_REFERRALS, 0)
-    bind_dn  = "{0}\\{1}".format(dn[0], username)
-    dn_password = password
-    l.simple_bind_s(bind_dn, password)
-
-    # The dn of our new entry/object
-
-
-    user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-    attrlist=["sAMAccountName", "displayName","mail"])
-
-    if len(user) > 0:
-        cn, user = user[0]
-        try:
-            u = User.objects.get(username=username)
-            return u
-        except User.DoesNotExist:
-            fullname = user['displayName'][0].split(' ')
-            user_instance = User.objects.get_or_create(username=username, password=password, first_name=fullname[0],
-                                                       last_name=fullname[1], is_active=True)
-            user_instance.save()
-
-            return user_instance
-    else:
-        return None
-
-
-class ImportUsersFromLDAP(views.APIView):
-
-
-    def get(self, request):
-
-        ldap_settings = loadConfig()
-        server_name = ldap_settings.get('serverName', '192.168.1.100')
-        port = ldap_settings.get('port', 389)
-        admin_username = ldap_settings.get('adminUsername', 'administrator')
-        bind_password = ldap_settings.get('bindPassword', '')
-        domain_controller = ldap_settings.get('domainController', 'vms')
-        dn = domain_controller.split('.')
-        dc = ''
-        dc = []
-        for ns in dn:
-            dc.append('dc={}'.format(ns))
-
-        dn = ','.join(dc)
-
-        try:
-            # Open a connection
-            l = ldap.initialize("ldap://{0}:{1}".format(server_name, port))
-            # Bind/authenticate with a user with apropriate rights to add objects
-            l.protocol_version = ldap.VERSION3
-            l.set_option(ldap.OPT_REFERRALS, 0)
-            bind_dn  = "{0}\\{1}".format(dn[0], admin_username)
-            l.simple_bind_s(bind_dn, bind_password)
-
-            # The dn of our new entry/object
-
-
-            users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sn=*)",
-            attrlist=["sAMAccountName", "displayName","mail"])
-
-            for user in users:
-                cn, user = user[0]
-                try:
-                    u = User.objects.get(username=user['sAMAccountName'])
-
-                except User.DoesNotExist:
-                    fullname = user['displayName'].split(' ')
-                    user_instance = User.objects.get_or_create(username=user['sAMAccountName'], password='password@1', first_name=fullname[0],
-                                                           email=user['mail'], last_name=fullname[1], is_active=True)
-                    user_instance.save()
-
-                    return user_instance
-
-            return Response({'detail': ''})
-        except ldap.LDAPError, e:
-
-            return Response({'detail': e}, status.HTTP_400_BAD_REQUEST)
 
 
 class AuthUser(views.APIView):
