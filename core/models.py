@@ -80,8 +80,8 @@ class Visitors(HistoryFieldsMixin):
     state_of_origin = models.CharField(max_length=50, blank=True, null=True)
     lga_of_origin = models.CharField(max_length=50, blank=True, null=True)
     image = models.TextField(blank=True, null=True)
-    fingerprint = models.TextField(max_length=100, blank=True, null=True)
-    scanned_signature = models.TextField(max_length=100, blank=True, null=True)
+    fingerprint = models.TextField(blank=True, null=True)
+    scanned_signature = models.TextField(blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
     group_type = models.ForeignKey(VisitorGroup, to_field='uuid', related_name='group', null=True, blank=True)
@@ -117,6 +117,7 @@ class Appointments(HistoryFieldsMixin):
     checked_in = models.DateTimeField(default=None, blank=True, null=True)
     checked_out = models.DateTimeField(blank=True, null=True)
     label_code = models.CharField(max_length=50, null=True, blank=True)
+    check_in_signature = models.TextField(blank=True, null=True)
     entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid",
                                     related_name="entrance")
 
