@@ -177,38 +177,48 @@ def get_or_create_user(user, username=None, password=None):
         if password is None:
             password = 'password@1'
 
-        try:
-            u = User.objects.get(username=username)
-            return u
-        except User.DoesNotExist:
+        fullname = user['displayName'][0].split(' ')
+        first_name = fullname[0]
+        last_name = 'None'
+        user_email = user.get('mail', None)
+        phone = user.get('telephoneNumber', None)
+        department_info = user.get('distinguishedName', None)
 
-            fullname = user['displayName'][0].split(' ')
-            first_name = fullname[0]
-            last_name = 'None'
-            user_email = user.get('mail', None)
-            phone = user.get('telephoneNumber', None)
-            department_info = user.get('distinguishedName', None)
-
-
-            if len(fullname) > 1:
+        if len(fullname) > 1:
                 last_name = fullname[1]
 
-            if phone is not None:
-                phone = phone[0]
-            else:
-                phone = ts[0]
+        if phone is not None:
+            phone = phone[0]
+        else:
+            phone = ts[0]
 
-            if user_email is not None:
-                user_email = user_email[0]
-            else:
-                user_email = 'mail{0}@ncc.org'.format(ts[0])
+        if user_email is not None:
+            user_email = user_email[0]
+        else:
+            user_email = 'mail{0}@ncc.org'.format(ts[0])
 
-            if department_info is not None:
-                department_info = department_info[0].split(',')
-                department_info = department_info[1].split('=')
-                department_info = department_info[1]
-            else:
-                department_info = 'None'
+        if department_info is not None:
+            department_info = department_info[0].split(',')
+            department_info = department_info[1].split('=')
+            department_info = department_info[1]
+        else:
+            department_info = 'None'
+
+        try:
+            user_instance = User.objects.get(username=username)
+            user_instance.first_name = first_name
+            user_instance.last_name = last_name
+            user_instance.email = user_email
+            user_instance.save()
+
+            UserProfile(
+                user_id=User.objects.get(username=username),
+                phone=phone,
+                department=department_info
+            ).save()
+
+            return user_instance
+        except User.DoesNotExist:
 
             user_instance = User.objects.get_or_create(
                 username=username,
