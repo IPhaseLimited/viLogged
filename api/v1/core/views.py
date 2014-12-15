@@ -226,14 +226,14 @@ def get_or_create_user(user, username=None, password=None):
             return user_instance
         except User.DoesNotExist:
 
-            user_instance = User.objects.get_or_create(
+            user_instance = User(
                 username=username,
                 password=password,
                 email=user_email,
                 first_name=first_name,
                 last_name=last_name,
                 is_active=True
-            )
+            ).save()
 
             try:
                 user_profile_instance = UserProfile.objects.get(user_id=user_instance.id)
