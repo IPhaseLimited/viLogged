@@ -208,6 +208,12 @@ def get_or_create_user(user, username=None, password=None):
         else:
             department_info = 'None'
 
+        if work_phone is not None:
+            work_phone = work_phone[0]
+
+        if home_phone is not None:
+            home_phone = home_phone[0]
+
         try:
             user_instance = User.objects.get(username=username)
             user_instance.first_name = first_name
