@@ -245,8 +245,7 @@ def get_or_create_user(user, username=None, password=None):
                 password=password,
                 email=user_email,
                 first_name=first_name,
-                last_name=last_name,
-                is_active=True
+                last_name=last_name
             )
             user_instance = user_instance.save()
 
