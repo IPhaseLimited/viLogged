@@ -183,6 +183,10 @@ def get_or_create_user(user, username=None, password=None):
         user_email = user.get('mail', None)
         phone = user.get('telephoneNumber', None)
         department_info = user.get('distinguishedName', None)
+        work_phone = user.get('ipPhone', None)
+        home_phone = user.get('home', None)
+
+
 
         if len(fullname) > 1:
                 last_name = fullname[1]
@@ -214,13 +218,17 @@ def get_or_create_user(user, username=None, password=None):
                 user_profile_instance = UserProfile.objects.get(user_id=user_instance.id)
                 user_profile_instance.phone = phone
                 user_profile_instance.department = department_info
+                user_profile_instance.work_phone = work_phone
+                user_profile_instance.home_phone = home_phone
                 user_profile_instance.save()
 
             except UserProfile.DoesNotExist:
                 UserProfile(
                     user_id=User.objects.get(username=username),
                     phone=phone,
-                    department=department_info
+                    department=department_info,
+                    work_phone=work_phone,
+                    home_phone=home_phone
                 ).save()
 
             return user_instance
@@ -239,13 +247,17 @@ def get_or_create_user(user, username=None, password=None):
                 user_profile_instance = UserProfile.objects.get(user_id=user_instance.id)
                 user_profile_instance.phone = phone
                 user_profile_instance.department = department_info
+                user_profile_instance.work_phone = work_phone
+                user_profile_instance.home_phone = home_phone
                 user_profile_instance.save()
 
             except UserProfile.DoesNotExist:
                 UserProfile(
                     user_id=User.objects.get(username=username),
                     phone=phone,
-                    department=department_info
+                    department=department_info,
+                    work_phone=work_phone,
+                    home_phone=home_phone
                 ).save()
 
             return user_instance
@@ -277,7 +289,14 @@ def ldap_login(username, password):
     # The dn of our new entry/object
 
     user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+                          attrlist=[
+                              "sAMAccountName",
+                              "displayName","mail",
+                              "distinguishedName",
+                              "telephoneNumber",
+                              'ipPhone',
+                              'home'
+                          ])
 
     return get_or_create_user(user, username, password)
 
@@ -312,7 +331,14 @@ class ImportUsersFromLDAP(views.APIView):
 
 
             users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(telephoneNumber=*)",
-                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+                                   attrlist=[
+                                      "sAMAccountName",
+                                      "displayName","mail",
+                                      "distinguishedName",
+                                      "telephoneNumber",
+                                      'ipPhone',
+                                      'home'
+                                   ])
 
             for cn, user in users:
                 get_or_create_user(user)
@@ -353,7 +379,14 @@ class TestConnection(views.APIView):
             dn=dc
 
             user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
-            attrlist=["sAMAccountName", "displayName","mail"])
+                                  attrlist=[
+                                      "sAMAccountName",
+                                      "displayName","mail",
+                                      "distinguishedName",
+                                      "telephoneNumber",
+                                      'ipPhone',
+                                      'home'
+                                  ])
             return Response()
         except:
             return Response({'detail': 'Problem with ldap connection'})
