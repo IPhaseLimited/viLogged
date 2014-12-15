@@ -108,6 +108,7 @@ class Appointments(HistoryFieldsMixin):
     representing = models.CharField(max_length=100, blank=True, null=True)
     purpose = models.CharField(max_length=50, blank=True, null=True)
     appointment_date = models.DateField()
+    appointment_end_date = models.DateField(null=True, blank=True)
     visit_start_time = models.TimeField()
     visit_end_time = models.TimeField()
     host_id = models.ForeignKey(User, blank=True, null=True, related_name="host")
