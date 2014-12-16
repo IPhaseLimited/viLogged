@@ -174,10 +174,12 @@ def get_or_create_user(user, username=None, password=None):
         cn, user = user[0]
         if username is None:
             username = user.get('sAMAccountName', None)
+        if username is None:
+            username = user.get('uid', None)[0]
         if password is None:
             password = 'password@1'
 
-        fullname = user['displayName'][0].split(' ')
+        fullname = user.get('displayName', ['NoneProvided NoName'])[0].split(' ')
         first_name = fullname[0]
         last_name = 'None'
         user_email = user.get('mail', None)
@@ -249,8 +251,9 @@ def get_or_create_user(user, username=None, password=None):
             )
             user_instance = user_instance.save()
 
+            user_data = User.objects.get(username=username)
             try:
-                user_profile_instance = UserProfile.objects.get(user_id=user_instance.id)
+                user_profile_instance = UserProfile.objects.get(user_id=user_data.id)
                 user_profile_instance.phone = phone
                 user_profile_instance.department = department_info
                 user_profile_instance.work_phone = work_phone
@@ -422,3 +425,23 @@ class AuthUser(views.APIView):
             # Return an 'invalid login' error message.
 
         #return Response({'error_message': '',DATA 'message': request.DATA})
+
+class TestUserInsert(views.APIView):
+
+    def get(self, request):
+        l = ldap.initialize("ldap://ldap.testathon.net:389")
+
+        # Bind/authenticate with a user with apropriate rights to add objects
+        l.protocol_version = ldap.VERSION3
+        l.set_option(ldap.OPT_REFERRALS, 0)
+        l.simple_bind_s("", "")
+
+        # The dn of our new entry/object
+        dn="OU=users,DC=testathon,DC=net"
+
+        users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(mail=*)",
+        attrlist=None)
+
+        get_or_create_user(users)
+
+        return Response({'detail': 'Completed without errors'})
