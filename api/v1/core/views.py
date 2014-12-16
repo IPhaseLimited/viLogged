@@ -222,8 +222,9 @@ def get_or_create_user(user, username=None, password=None):
             user_instance.last_name = last_name
             user_instance.email = user_email
             user_instance.save()
+            user_data = User.objects.get(username=username)
             try:
-                user_profile_instance = UserProfile.objects.get(user_id=user_instance.id)
+                user_profile_instance = UserProfile.objects.get(user_id=user_data.id)
                 user_profile_instance.phone = phone
                 user_profile_instance.department = department_info
                 user_profile_instance.work_phone = work_phone
@@ -298,14 +299,7 @@ def ldap_login(username, password):
     # The dn of our new entry/object
 
     user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-                          attrlist=[
-                              "sAMAccountName",
-                              "displayName","mail",
-                              "distinguishedName",
-                              "telephoneNumber",
-                              'ipPhone',
-                              'home'
-                          ])
+                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
 
     return get_or_create_user(user, username, password)
 
@@ -340,14 +334,7 @@ class ImportUsersFromLDAP(views.APIView):
 
 
             users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(telephoneNumber=*)",
-                                   attrlist=[
-                                      "sAMAccountName",
-                                      "displayName","mail",
-                                      "distinguishedName",
-                                      "telephoneNumber",
-                                      'ipPhone',
-                                      'home'
-                                   ])
+                                   attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
 
             for cn, user in users:
                 get_or_create_user(user)
@@ -388,14 +375,7 @@ class TestConnection(views.APIView):
             dn=dc
 
             user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
-                                  attrlist=[
-                                      "sAMAccountName",
-                                      "displayName","mail",
-                                      "distinguishedName",
-                                      "telephoneNumber",
-                                      'ipPhone',
-                                      'home'
-                                  ])
+                                  attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
             return Response()
         except:
             return Response({'detail': 'Problem with ldap connection'})
