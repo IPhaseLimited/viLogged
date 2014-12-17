@@ -9,7 +9,7 @@ class VisitorsGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VisitorGroup
-        fields = ('group_name', 'black_listed', 'uuid', 'created', 'modified', 'modified_by', 'created_by')
+        fields = ('group_name', 'black_listed', 'uuid', 'created', 'modified', 'modified_by', 'created_by', 'params')
         lookup_field = 'uuid'
         filter_fields = ('group_name', 'black_listed', 'uuid',)
 

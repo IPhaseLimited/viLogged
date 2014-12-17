@@ -57,6 +57,7 @@ class CompanyEntranceNames(HistoryFieldsMixin):
 class VisitorGroup(HistoryFieldsMixin):
     group_name = models.CharField(max_length=50, unique=True)
     black_listed = models.BooleanField(default=False)
+    params = models.TextField(null=True, blank=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='group_modified_by')
 
     class Meta:
