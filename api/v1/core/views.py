@@ -187,6 +187,7 @@ def get_or_create_user(user, username=None, password=None):
         department_info = user.get('distinguishedName', None)
         work_phone = user.get('ipPhone', None)
         home_phone = user.get('home', None)
+        department_floor = user.get('physicalDeliveryOfficeName', None)
 
 
 
@@ -216,6 +217,9 @@ def get_or_create_user(user, username=None, password=None):
         if home_phone is not None:
             home_phone = home_phone[0]
 
+        if department_floor is not None:
+            department_floor = department_floor[0]
+
         try:
             user_instance = User.objects.get(username=username)
             user_instance.first_name = first_name
@@ -229,6 +233,7 @@ def get_or_create_user(user, username=None, password=None):
                 user_profile_instance.department = department_info
                 user_profile_instance.work_phone = work_phone
                 user_profile_instance.home_phone = home_phone
+                user_profile_instance.department_floor = department_floor
                 user_profile_instance.save()
 
             except UserProfile.DoesNotExist:
@@ -237,7 +242,8 @@ def get_or_create_user(user, username=None, password=None):
                     phone=phone,
                     department=department_info,
                     work_phone=work_phone,
-                    home_phone=home_phone
+                    home_phone=home_phone,
+                    department_floor=department_floor
                 ).save()
 
             return user_instance
@@ -259,6 +265,7 @@ def get_or_create_user(user, username=None, password=None):
                 user_profile_instance.department = department_info
                 user_profile_instance.work_phone = work_phone
                 user_profile_instance.home_phone = home_phone
+                user_profile_instance.department_floor = department_floor
                 user_profile_instance.save()
 
             except UserProfile.DoesNotExist:
@@ -267,7 +274,8 @@ def get_or_create_user(user, username=None, password=None):
                     phone=phone,
                     department=department_info,
                     work_phone=work_phone,
-                    home_phone=home_phone
+                    home_phone=home_phone,
+                    department_floor=department_floor
                 ).save()
 
             return user_instance
@@ -344,7 +352,7 @@ def ldap_login(username, password):
     # The dn of our new entry/object
 
     user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
+                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
 
     return get_or_create_user(user, username, password)
 
@@ -379,7 +387,7 @@ class ImportUsersFromLDAP(views.APIView):
 
 
             users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(telephoneNumber=*)",
-                                   attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
+                                   attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
 
             for cn, user in users:
                 get_or_create_user(user)
@@ -420,7 +428,7 @@ class TestConnection(views.APIView):
             dn=dc
 
             user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
-                                  attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home"])
+                                  attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
             return Response()
         except:
             return Response({'detail': 'Problem with ldap connection'})
