@@ -33,6 +33,7 @@ class UserProfile(models.Model):
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)
     department = models.CharField(max_length=50, blank=True, null=True)
+    department_floor = models.CharField(max_length=20, blank=True, null=True)
     designation = models.CharField(max_length=50, blank=True, null=True)
     image = models.TextField(blank=True, null=True)
 
