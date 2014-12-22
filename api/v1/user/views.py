@@ -10,8 +10,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
-        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
 class UserProfileNestedSerializer(serializers.ModelSerializer):
@@ -19,8 +19,8 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         serializer_class = UserProfileSerializer
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
-        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
 class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -160,7 +160,7 @@ class UserProfileImportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
