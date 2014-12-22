@@ -308,6 +308,7 @@ def get_nested_user(user):
                     'department': profile_data.get('department', None),
                     'gender': profile_data.get('gender', None),
                     'image': profile_data.get('image', None),
+                    'department_floor': profile_data.get('department_floor', None)
                 }
 
             except UserProfile.DoesNotExist:
