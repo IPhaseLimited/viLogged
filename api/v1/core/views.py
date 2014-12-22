@@ -275,6 +275,51 @@ def get_or_create_user(user, username=None, password=None):
         return None
 
 
+def get_nested_user(user):
+    user_core = {}
+    token = {'key': ''}
+    if user is not None:
+            from django.core import serializers
+            token = Token.objects.get(user=user)
+            data = serializers.serialize('json', [user])
+            converted_user = json.loads(data)[0]
+            data = converted_user.get('fields', {})
+            pk = converted_user.get('pk', None)
+
+            user_profile = {}
+            try:
+                profile = UserProfile.objects.get(user_id=pk)
+                converted_profile = serializers.serialize('json', [profile])
+                converted_profile = json.loads(converted_profile)[0]
+                profile_data = converted_profile.get('fields', {})
+                user_profile = {
+                    'user_id': profile_data.get('user_id', None),
+                    'phone': profile_data.get('phone', None),
+                    'home_phone': profile_data.get('home_phone', None),
+                    'work_phone': profile_data.get('work_phone', None),
+                    'department': profile_data.get('department', None),
+                    'gender': profile_data.get('gender', None),
+                    'image': profile_data.get('image', None),
+                }
+
+            except UserProfile.DoesNotExist:
+                pass
+
+            user_core = {
+                'id': pk,
+                'username': data.get('username', None),
+                'email': data.get('email', None),
+                'first_name': data.get('first_name', None),
+                'last_name': data.get('last_name', None),
+                'is_staff': data.get('is_staff', None),
+                'is_active': data.get('is_active', None),
+                'is_superuser': data.get('is_superuser', None),
+                'user_profile': user_profile
+            }
+
+    return {'detail': '', 'user': user_core, 'token': token.key}
+
+
 def ldap_login(username, password):
 
     ldap_settings = loadConfig()
@@ -392,19 +437,20 @@ class AuthUser(views.APIView):
         if user is not None:
             if user.is_active:
                 token = Token.objects.get(user=user)
-                return Response({'token': token.key})
+                return Response(get_nested_user(user))
             else:
                 return Response({'detail': 'User not active'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             ldap_user = ldap_login(username, password)
             if ldap_user is not None:
-                token = Token.objects.get(user=ldap_user)
-                return Response({'token': token.key})
+
+                return Response(get_nested_user(ldap_user))
 
             return Response({'detail': 'invalid credentials provided'}, status=status.HTTP_400_BAD_REQUEST)
             # Return an 'invalid login' error message.
 
         #return Response({'error_message': '',DATA 'message': request.DATA})
+
 
 class TestUserInsert(views.APIView):
 
@@ -422,6 +468,46 @@ class TestUserInsert(views.APIView):
         users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(mail=*)",
         attrlist=None)
 
-        get_or_create_user(users)
+        user = get_or_create_user(users)
+        if user is not None:
+            from django.core import serializers
+            token = Token.objects.get(user=user)
+            data = serializers.serialize('json', [user])
+            converted_user = json.loads(data)[0]
+            data = converted_user.get('fields', {})
+            pk = converted_user.get('pk', None)
 
-        return Response({'detail': 'Completed without errors'})
+            user_profile = {}
+            try:
+                profile = UserProfile.objects.get(user_id=pk)
+                converted_profile = serializers.serialize('json', [profile])
+                converted_profile = json.loads(converted_profile)[0]
+                profile_data = converted_profile.get('fields', {})
+                user_profile = {
+                    'user_id': profile_data.get('user_id', None),
+                    'phone': profile_data.get('phone', None),
+                    'home_phone': profile_data.get('home_phone', None),
+                    'work_phone': profile_data.get('work_phone', None),
+                    'department': profile_data.get('department', None),
+                    'gender': profile_data.get('gender', None),
+                    'image': profile_data.get('image', None),
+                }
+
+            except UserProfile.DoesNotExist:
+                pass
+
+            user_core = {
+                'id': pk,
+                'username': data.get('username', None),
+                'email': data.get('email', None),
+                'first_name': data.get('first_name', None),
+                'last_name': data.get('last_name', None),
+                'is_staff': data.get('is_staff', None),
+                'is_active': data.get('is_active', None),
+                'is_superuser': data.get('is_superuser', None),
+                'user_profile': user_profile
+            }
+
+            return Response({'detail': '', 'user': user_core, 'token': token.key})
+
+        return Response({'detail': 'none'})
