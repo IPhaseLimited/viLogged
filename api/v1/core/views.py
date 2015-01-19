@@ -156,6 +156,7 @@ import os
 import json
 from core.settings import PROJECT_ROOT
 
+
 def loadConfig():
     file_name = os.path.join(PROJECT_ROOT, 'ldap.json')
     data = {}
@@ -188,8 +189,6 @@ def get_or_create_user(user, username=None, password=None):
         work_phone = user.get('ipPhone', None)
         home_phone = user.get('home', None)
         department_floor = user.get('physicalDeliveryOfficeName', None)
-
-
 
         if len(fullname) > 1:
                 last_name = fullname[1]
@@ -257,7 +256,6 @@ def get_or_create_user(user, username=None, password=None):
                 last_name=last_name
             )
             user_instance = user_instance.save()
-
             user_data = User.objects.get(username=username)
             try:
                 user_profile_instance = UserProfile.objects.get(user_id=user_data.id)
@@ -278,7 +276,7 @@ def get_or_create_user(user, username=None, password=None):
                     department_floor=department_floor
                 ).save()
 
-            return user_instance
+            return user_data
     else:
         return None
 
