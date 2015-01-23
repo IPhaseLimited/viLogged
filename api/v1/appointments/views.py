@@ -65,7 +65,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('visitor_id', 'representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time',
                   'host_id', 'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id',
-                  'uuid', 'label_code', 'created', 'modified_by', 'created_by', 'modified', 'appointment_end_date')
+                  'uuid', 'label_code', 'created', 'modified_by', 'created_by', 'modified', 'appointment_end_date', 'teams')
 
 
 class AppointmentNestedSerializer(serializers.ModelSerializer):
@@ -80,7 +80,7 @@ class AppointmentNestedSerializer(serializers.ModelSerializer):
         fields = ('representing', 'purpose', 'appointment_date', 'visit_start_time', 'visit_end_time', 'host_id',
                   'escort_required', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
                   'visitor_id', 'vehicle', 'restricted_items', 'label_code', 'created', 'modified_by', 'created_by',
-                  'modified', 'appointment_end_date')
+                  'modified', 'appointment_end_date', 'teams')
 
 
 class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -91,7 +91,7 @@ class AppointmentList(generics.ListAPIView, mixins.CreateModelMixin):
     #lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id', 'escort_required',
                      'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid',
-                     'visitor_id', 'appointment_end_date')
+                     'visitor_id', 'appointment_end_date', 'teams')
 
     def get_queryset(self):
 
@@ -109,7 +109,7 @@ class AppointmentNestedList(generics.ListAPIView, mixins.CreateModelMixin):
     lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required', 'uuid',
                      'label_code', 'is_approved', 'is_expired', 'checked_in', 'checked_out', 'visitor_id__uuid',
-                     'entrance_id', 'appointment_end_date')
+                     'entrance_id', 'appointment_end_date', 'teams')
 
     def get_queryset(self):
 
@@ -151,7 +151,7 @@ class AppointmentNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
     lookup_field = 'uuid'
     filter_fields = ('appointment_date', 'visit_start_time', 'visit_end_time', 'host_id__id', 'escort_required',
                      'is_approved', 'is_expired', 'checked_in', 'checked_out', 'entrance_id', 'uuid', 'visitor_id__uuid',
-                     'label_code', 'appointment_end_date')
+                     'label_code', 'appointment_end_date', 'teams')
 
     def get_queryset(self):
 
