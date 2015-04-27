@@ -66,13 +66,38 @@ class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visitors
         fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
+                  'state_of_origin', 'lga_of_origin', 'occupation', 'company_name', 'company_address',
+                  'visitors_pass_code', 'nationality', 'uuid', 'created',
+                  'modified', 'modified_by', 'created_by', 'gender')
+        lookup_field = 'uuid',
+
+
+class VisitorNestedSerializer(serializers.ModelSerializer):
+    current_location = VisitorsLocationSerializer(many=False)
+    group_type = VisitorsGroupSerializer(many=False)
+
+    class Meta:
+        model = Visitors
+        fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
+                  'state_of_origin', 'lga_of_origin', 'occupation', 'company_name', 'company_address',
+                  'visitors_pass_code', 'nationality', 'uuid', 'current_location',
+                  'created', 'modified', 'modified_by', 'created_by', 'gender')
+        lookup_field = 'uuid'
+
+
+class VisitorDetailSerializer(serializers.ModelSerializer):
+    group_type = UUIDRelatedField()
+
+    class Meta:
+        model = Visitors
+        fields = ('first_name', 'last_name', 'visitors_email', 'visitors_phone', 'date_of_birth', 'group_type',
                   'state_of_origin', 'lga_of_origin', 'image', 'occupation', 'company_name', 'company_address',
                   'fingerprint', 'scanned_signature', 'visitors_pass_code', 'nationality', 'uuid', 'created',
                   'modified', 'modified_by', 'created_by', 'gender')
         lookup_field = 'uuid',
 
 
-class VisitorNestedSerializer(serializers.ModelSerializer):
+class VisitorNestedDetailSerializer(serializers.ModelSerializer):
     current_location = VisitorsLocationSerializer(many=False)
     group_type = VisitorsGroupSerializer(many=False)
     class Meta:
@@ -152,7 +177,7 @@ class VisitorsNestedList(generics.ListAPIView, mixins.CreateModelMixin, mixins.U
 class VisitorNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                           generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Visitors.objects.all()
-    serializer_class = VisitorNestedSerializer
+    serializer_class = VisitorNestedDetailSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 
@@ -172,7 +197,7 @@ class VisitorNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mi
 class VisitorDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                     generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = Visitors.objects.all()
-    serializer_class = VisitorSerializer
+    serializer_class = VisitorDetailSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     lookup_field = 'uuid'
 

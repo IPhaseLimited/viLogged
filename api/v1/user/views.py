@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'department_floor')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
@@ -19,7 +19,26 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         serializer_class = UserProfileSerializer
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'department_floor')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
+
+
+class UserProfileDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'department_floor',
+                  'image')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
+
+
+class UserProfileNestedDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        serializer_class = UserProfileSerializer
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'department_floor',
+                  'image')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
@@ -44,7 +63,7 @@ class UserProfileList(generics.ListAPIView, mixins.CreateModelMixin):
 class UserProfileDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                         generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserProfileDetailSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
@@ -63,7 +82,7 @@ class UserProfileDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixi
 class UserProfileNestedDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                               generics.GenericAPIView, mixins.CreateModelMixin):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileNestedSerializer
+    serializer_class = UserProfileNestedDetailSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -116,7 +135,7 @@ class UserNestedSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer(many=False)
+    user_profile = UserProfileDetailSerializer(many=False)
     #password = serializers.CharField(required=False)
 
     class Meta:
