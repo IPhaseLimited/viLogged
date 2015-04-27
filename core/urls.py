@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from api.v1.core.views import AuthUser, ImportUsersFromLDAP, TestConnection
+from api.v1.core.views import AuthUser, ImportUsersFromLDAP, TestConnection, TestUserInsert
 from django.contrib import admin
 admin.autodiscover()
 
@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^import-users/?', ImportUsersFromLDAP.as_view()),
     url(r'^test-ldap/?', TestConnection.as_view()),
+    url(r'^test-user-insert/?', TestUserInsert.as_view()),
 )

@@ -156,6 +156,7 @@ import os
 import json
 from core.settings import PROJECT_ROOT
 
+
 def loadConfig():
     file_name = os.path.join(PROJECT_ROOT, 'ldap.json')
     data = {}
@@ -174,60 +175,156 @@ def get_or_create_user(user, username=None, password=None):
         cn, user = user[0]
         if username is None:
             username = user.get('sAMAccountName', None)
+        if username is None:
+            username = user.get('uid', None)[0]
         if password is None:
             password = 'password@1'
 
-        try:
-            u = User.objects.get(username=username)
-            return u
-        except User.DoesNotExist:
+        fullname = user.get('displayName', ['NoneProvided NoName'])[0].split(' ')
+        first_name = fullname[0]
+        last_name = 'None'
+        user_email = user.get('mail', None)
+        phone = user.get('telephoneNumber', None)
+        department_info = user.get('distinguishedName', None)
+        work_phone = user.get('ipPhone', None)
+        home_phone = user.get('home', None)
+        department_floor = user.get('physicalDeliveryOfficeName', None)
 
-            fullname = user['displayName'][0].split(' ')
-            first_name = fullname[0]
-            last_name = 'None'
-            user_email = user.get('mail', None)
-            phone = user.get('telephoneNumber', None)
-            department_info = user.get('distinguishedName', None)
-
-
-            if len(fullname) > 1:
+        if len(fullname) > 1:
                 last_name = fullname[1]
 
-            if phone is not None:
-                phone = phone[0]
-            else:
-                phone = ts[0]
+        if phone is not None:
+            phone = phone[0]
+        else:
+            phone = ts[0]
 
-            if user_email is not None:
-                user_email = user_email[0]
-            else:
-                user_email = 'mail{0}@ncc.org'.format(ts[0])
+        if user_email is not None:
+            user_email = user_email[0]
+        else:
+            user_email = 'mail{0}@ncc.org'.format(ts[0])
 
-            if department_info is not None:
-                department_info = department_info[0].split(',')
-                department_info = department_info[1].split('=')
-                department_info = department_info[1]
-            else:
-                department_info = 'None'
+        if department_info is not None:
+            department_info = department_info[0].split(',')
+            department_info = department_info[1].split('=')
+            department_info = department_info[1]
+        else:
+            department_info = 'None'
 
-            user_instance = User.objects.get_or_create(
+        if work_phone is not None:
+            work_phone = work_phone[0]
+
+        if home_phone is not None:
+            home_phone = home_phone[0]
+
+        if department_floor is not None:
+            department_floor = department_floor[0]
+
+        try:
+            user_instance = User.objects.get(username=username)
+            user_instance.first_name = first_name
+            user_instance.last_name = last_name
+            user_instance.email = user_email
+            user_instance.save()
+            user_data = User.objects.get(username=username)
+            try:
+                user_profile_instance = UserProfile.objects.get(user_id=user_data.id)
+                user_profile_instance.phone = phone
+                user_profile_instance.department = department_info
+                user_profile_instance.work_phone = work_phone
+                user_profile_instance.home_phone = home_phone
+                user_profile_instance.department_floor = department_floor
+                user_profile_instance.save()
+
+            except UserProfile.DoesNotExist:
+                UserProfile(
+                    user_id=User.objects.get(username=username),
+                    phone=phone,
+                    department=department_info,
+                    work_phone=work_phone,
+                    home_phone=home_phone,
+                    department_floor=department_floor
+                ).save()
+
+            return user_instance
+        except User.DoesNotExist:
+
+            user_instance = User.objects.create_user(
                 username=username,
                 password=password,
                 email=user_email,
                 first_name=first_name,
-                last_name=last_name,
-                is_active=True
+                last_name=last_name
             )
+            user_instance = user_instance.save()
+            user_data = User.objects.get(username=username)
+            try:
+                user_profile_instance = UserProfile.objects.get(user_id=user_data.id)
+                user_profile_instance.phone = phone
+                user_profile_instance.department = department_info
+                user_profile_instance.work_phone = work_phone
+                user_profile_instance.home_phone = home_phone
+                user_profile_instance.department_floor = department_floor
+                user_profile_instance.save()
 
-            UserProfile(
-                user_id=User.objects.get(username=username),
-                phone=phone,
-                department=department_info
-            ).save()
+            except UserProfile.DoesNotExist:
+                UserProfile(
+                    user_id=User.objects.get(username=username),
+                    phone=phone,
+                    department=department_info,
+                    work_phone=work_phone,
+                    home_phone=home_phone,
+                    department_floor=department_floor
+                ).save()
 
-            return user_instance
+            return user_data
     else:
         return None
+
+
+def get_nested_user(user):
+    user_core = {}
+    token = {'key': ''}
+    if user is not None:
+            from django.core import serializers
+            token = Token.objects.get(user=user)
+            data = serializers.serialize('json', [user])
+            converted_user = json.loads(data)[0]
+            data = converted_user.get('fields', {})
+            pk = converted_user.get('pk', None)
+
+            user_profile = {}
+            try:
+                profile = UserProfile.objects.get(user_id=pk)
+                converted_profile = serializers.serialize('json', [profile])
+                converted_profile = json.loads(converted_profile)[0]
+                profile_data = converted_profile.get('fields', {})
+                user_profile = {
+                    'user_id': profile_data.get('user_id', None),
+                    'phone': profile_data.get('phone', None),
+                    'home_phone': profile_data.get('home_phone', None),
+                    'work_phone': profile_data.get('work_phone', None),
+                    'department': profile_data.get('department', None),
+                    'gender': profile_data.get('gender', None),
+                    'image': profile_data.get('image', None),
+                    'department_floor': profile_data.get('department_floor', None)
+                }
+
+            except UserProfile.DoesNotExist:
+                pass
+
+            user_core = {
+                'id': pk,
+                'username': data.get('username', None),
+                'email': data.get('email', None),
+                'first_name': data.get('first_name', None),
+                'last_name': data.get('last_name', None),
+                'is_staff': data.get('is_staff', None),
+                'is_active': data.get('is_active', None),
+                'is_superuser': data.get('is_superuser', None),
+                'user_profile': user_profile
+            }
+
+    return {'detail': '', 'user': user_core, 'token': token.key}
 
 
 def ldap_login(username, password):
@@ -254,7 +351,7 @@ def ldap_login(username, password):
     # The dn of our new entry/object
 
     user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+username+")",
-                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
 
     return get_or_create_user(user, username, password)
 
@@ -289,7 +386,7 @@ class ImportUsersFromLDAP(views.APIView):
 
 
             users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(telephoneNumber=*)",
-                          attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber"])
+                                   attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
 
             for cn, user in users:
                 get_or_create_user(user)
@@ -330,7 +427,7 @@ class TestConnection(views.APIView):
             dn=dc
 
             user = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName="+admin_username+")",
-            attrlist=["sAMAccountName", "displayName","mail"])
+                                  attrlist=["sAMAccountName", "displayName","mail", "distinguishedName", "telephoneNumber", "ipPhone", "home", "physicalDeliveryOfficeName"])
             return Response()
         except:
             return Response({'detail': 'Problem with ldap connection'})
@@ -347,16 +444,77 @@ class AuthUser(views.APIView):
         if user is not None:
             if user.is_active:
                 token = Token.objects.get(user=user)
-                return Response({'token': token.key})
+                return Response(get_nested_user(user))
             else:
                 return Response({'detail': 'User not active'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             ldap_user = ldap_login(username, password)
             if ldap_user is not None:
-                token = Token.objects.get(user=ldap_user)
-                return Response({'token': token.key})
+
+                return Response(get_nested_user(ldap_user))
 
             return Response({'detail': 'invalid credentials provided'}, status=status.HTTP_400_BAD_REQUEST)
             # Return an 'invalid login' error message.
 
         #return Response({'error_message': '',DATA 'message': request.DATA})
+
+
+class TestUserInsert(views.APIView):
+
+    def get(self, request):
+        l = ldap.initialize("ldap://ldap.testathon.net:389")
+
+        # Bind/authenticate with a user with apropriate rights to add objects
+        l.protocol_version = ldap.VERSION3
+        l.set_option(ldap.OPT_REFERRALS, 0)
+        l.simple_bind_s("", "")
+
+        # The dn of our new entry/object
+        dn="OU=users,DC=testathon,DC=net"
+
+        users = l.search_ext_s(dn, ldap.SCOPE_SUBTREE, "(mail=*)",
+        attrlist=None)
+
+        user = get_or_create_user(users)
+        if user is not None:
+            from django.core import serializers
+            token = Token.objects.get(user=user)
+            data = serializers.serialize('json', [user])
+            converted_user = json.loads(data)[0]
+            data = converted_user.get('fields', {})
+            pk = converted_user.get('pk', None)
+
+            user_profile = {}
+            try:
+                profile = UserProfile.objects.get(user_id=pk)
+                converted_profile = serializers.serialize('json', [profile])
+                converted_profile = json.loads(converted_profile)[0]
+                profile_data = converted_profile.get('fields', {})
+                user_profile = {
+                    'user_id': profile_data.get('user_id', None),
+                    'phone': profile_data.get('phone', None),
+                    'home_phone': profile_data.get('home_phone', None),
+                    'work_phone': profile_data.get('work_phone', None),
+                    'department': profile_data.get('department', None),
+                    'gender': profile_data.get('gender', None),
+                    'image': profile_data.get('image', None),
+                }
+
+            except UserProfile.DoesNotExist:
+                pass
+
+            user_core = {
+                'id': pk,
+                'username': data.get('username', None),
+                'email': data.get('email', None),
+                'first_name': data.get('first_name', None),
+                'last_name': data.get('last_name', None),
+                'is_staff': data.get('is_staff', None),
+                'is_active': data.get('is_active', None),
+                'is_superuser': data.get('is_superuser', None),
+                'user_profile': user_profile
+            }
+
+            return Response({'detail': '', 'user': user_core, 'token': token.key})
+
+        return Response({'detail': 'none'})
