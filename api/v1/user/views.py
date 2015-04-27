@@ -10,8 +10,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
-        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
 class UserProfileNestedSerializer(serializers.ModelSerializer):
@@ -19,8 +19,8 @@ class UserProfileNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         serializer_class = UserProfileSerializer
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
-        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
+        filter_fields = ('phone', 'home_phone', 'work_phone', 'gender', 'department_floor')
 
 
 class UserProfileNestedList(generics.ListAPIView, mixins.CreateModelMixin):
@@ -86,7 +86,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
                   'is_superuser', 'user_profile')
-        filter_fields = ('username', 'email',)
+        filter_fields = ('username', 'email', 'first_name', 'last_name',)
         write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):
@@ -104,7 +104,7 @@ class UserNestedSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
                   'is_superuser', 'user_profile')
-        filter_fields = ('username', 'email',)
+        filter_fields = ('username', 'email', 'first_name', 'last_name',)
         write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):
@@ -140,7 +140,8 @@ class UserList(generics.ListAPIView, mixins.CreateModelMixin):
     model = User
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone')
+    filter_fields = ('username', 'email', 'user_profile__phone', 'user_profile__work_phone', 'user_profile__home_phone',
+                     'first_name', 'last_name',)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -160,7 +161,7 @@ class UserProfileImportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image')
+        fields = ('user_id', 'phone', 'home_phone', 'work_phone', 'department', 'id', 'gender', 'image', 'department_floor')
         filter_fields = ('phone', 'home_phone', 'work_phone', 'gender')
 
 
@@ -171,7 +172,7 @@ class UserImportSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active',
                   'is_superuser', 'user_profile')
-        filter_fields = ('username', 'email',)
+        filter_fields = ('username', 'email', 'first_name', 'last_name',)
         write_only_fields = ('password',)
 
     def restore_object(self, attrs, instance=None):

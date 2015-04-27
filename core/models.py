@@ -33,6 +33,7 @@ class UserProfile(models.Model):
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True, null=True)
     department = models.CharField(max_length=50, blank=True, null=True)
+    department_floor = models.CharField(max_length=20, blank=True, null=True)
     designation = models.CharField(max_length=50, blank=True, null=True)
     image = models.TextField(blank=True, null=True)
 
@@ -57,6 +58,7 @@ class CompanyEntranceNames(HistoryFieldsMixin):
 class VisitorGroup(HistoryFieldsMixin):
     group_name = models.CharField(max_length=50, unique=True)
     black_listed = models.BooleanField(default=False)
+    params = models.TextField(null=True, blank=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='group_modified_by')
 
     class Meta:
@@ -80,8 +82,8 @@ class Visitors(HistoryFieldsMixin):
     state_of_origin = models.CharField(max_length=50, blank=True, null=True)
     lga_of_origin = models.CharField(max_length=50, blank=True, null=True)
     image = models.TextField(blank=True, null=True)
-    fingerprint = models.TextField(max_length=100, blank=True, null=True)
-    scanned_signature = models.TextField(max_length=100, blank=True, null=True)
+    fingerprint = models.TextField(blank=True, null=True)
+    scanned_signature = models.TextField(blank=True, null=True)
     visitors_pass_code = models.CharField(max_length=50, blank=True, null=True)
     modified_by = models.ForeignKey('auth.User', null=True, blank=True, related_name='visitor_modified_by')
     group_type = models.ForeignKey(VisitorGroup, to_field='uuid', related_name='group', null=True, blank=True)
@@ -108,6 +110,7 @@ class Appointments(HistoryFieldsMixin):
     representing = models.CharField(max_length=100, blank=True, null=True)
     purpose = models.CharField(max_length=50, blank=True, null=True)
     appointment_date = models.DateField()
+    appointment_end_date = models.DateField(null=True, blank=True)
     visit_start_time = models.TimeField()
     visit_end_time = models.TimeField()
     host_id = models.ForeignKey(User, blank=True, null=True, related_name="host")
@@ -117,6 +120,7 @@ class Appointments(HistoryFieldsMixin):
     checked_in = models.DateTimeField(default=None, blank=True, null=True)
     checked_out = models.DateTimeField(blank=True, null=True)
     label_code = models.CharField(max_length=50, null=True, blank=True)
+    teams = models.TextField(null=True, blank=True)
     entrance_id = models.ForeignKey(CompanyEntranceNames, blank=True, null=True, to_field="uuid",
                                     related_name="entrance")
 
